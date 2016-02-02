@@ -20,10 +20,4 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[ssh::default]
-      - recipe[python::default]
-      - recipe[git::default]
-      - recipe[ureka::default]
     attributes: 
-      ssh:
-        options': {'Compression': 'yes', 'ForwardX11': 'yes', 'X11UseLocalhost': 'yes', 'UsePAM': 'no'}

@@ -1,4 +1,4 @@
-name 'Omeka'
+name 'omeka'
 maintainer 'Harvard ATG'
 maintainer_email 'josh_beauregard@harvard.edu'
 license 'MIT License'

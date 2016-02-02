@@ -6,18 +6,27 @@ driver:
 provisioner:
   name: chef_zero
 
-# Uncomment the following verifier to leverage Inspec instead of Busser (the
-# default verifier)
-# verifier:
-#   name: inspec
+    # Uncomment the following verifier to leverage Inspec instead of Busser (the
+    # default verifier)
+    # verifier:
+    #   name: inspec
 
 platforms:
   - name: centos
     driver_config:
       image: centos
       platform: rhel
+  - name: ubuntu
+    run_list:
+      - recipe[apt]
+    driver_config:
+      image: ubuntu
+      platform: debian
 
 suites:
   - name: default
     run_list:
+      - recipe[nginx::repo]
+      - recipe[nginx::default]
+      - recipe[omeka::default]
     attributes: 

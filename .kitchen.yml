@@ -30,3 +30,5 @@ suites:
       - recipe[nginx::default]
       - recipe[omeka::default]
     attributes: 
+      nginx:
+        repo_source: nginx

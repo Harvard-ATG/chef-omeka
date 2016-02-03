@@ -18,12 +18,17 @@ directory node['omeka']['location'] do
   action :create
 end
 
-remote_file '/tmp/omeka.zip' do
+omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip"
+remote_file omeka_zip do
   owner node['omeka']['user']
   group node['nginx']['user']
   mode '0644'
-  source 'http://www.example.com/remote_file'
-  checksum 'sha256checksum'
+  source node['omeka']['download_url']
 end
 
-
+bash 'unzip omeka' do
+  user 'root'
+  cwd ::File.dirname(omeka_zip)
+  code "unzip #{::File.basename(omeka_zip)} -C #{::File.dirname(omeka_zip)}"
+  not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip") }
+end

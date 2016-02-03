@@ -1,9 +1,9 @@
-Harvard ATG's chef starter cookbook cookbook
+Harvard ATG's omeka cookbook
 =============================
 
-chef starter cookbook (0.1.0) Base Cookbook
+omeka (0.1.0) A helper for a LAMP Stack running Omeka
 
-Installs/Configures ...
+A helper Stack for running the Omeka (http://omeka.org), software stack
 
 Requirements
 ------------
@@ -11,6 +11,18 @@ Requirements
 ### Platforms
 
 ### Dependencies
+
+`yum ~> 3.5.2`
+
+`ssh ~> 0.10.10`
+
+`mysql ~> 6.1.2`
+
+`nginx ~> 2.7.6`
+
+`php ~> 1.7.2`
+
+`zip ~> 1.1.0`
 
 
 Attributes
@@ -52,7 +64,7 @@ License and Authors
 ------------------
 
 The following engineers have contributed to this code:
- * [Josh Beauregard](https://github.com/sanguis) - 1 commits
+ * [Josh Beauregard](https://github.com/sanguis) - 12 commits
 
 Copyright:: 2016 Harvard ATG
 

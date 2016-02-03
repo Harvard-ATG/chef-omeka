@@ -4,9 +4,7 @@
 #
 # Copyright (c) 2016 Harvard ATG, All Rights Reserved.
 #
-
-user node['omeka']['user'] do
-  username node['omeka']['user']
+user node['omeka']['owner'] do
   action :create
   comment 'Omeka User'
 end
@@ -21,10 +19,10 @@ end
 
 omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip"
 remote_file omeka_zip do
-  owner node['omeka']['user']
+  owner node['omeka']['owner']
   group node['nginx']['user']
   mode '0644'
-  source node['omeka']['download_url']
+  source "#{node['omeka']['location'] + node['omeka']['version']}.zip"
 end
 
 bash 'unzip omeka' do
@@ -32,7 +30,7 @@ bash 'unzip omeka' do
   cwd ::File.dirname(omeka_zip)
   code <<-EOH
     unzip #{::File.basename(omeka_zip)} -C #{::File.dirname(omeka_zip)}"
-    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['location']}
+    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']}
   EOH
   not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip") }
 end

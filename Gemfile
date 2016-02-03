@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'test-kitchen'
+gem 'chefspec'
 gem 'berkshelf'
 gem 'kitchen-ec2'
 gem 'kitchen-docker'

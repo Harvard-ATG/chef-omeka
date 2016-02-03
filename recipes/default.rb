@@ -17,21 +17,32 @@ directory node['omeka']['directory'] do
   action :create
 end
 
-omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip"
+omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp'}/omeka-#{node['omeka']['version']}.zip"
 remote_file omeka_zip do
   owner node['omeka']['owner']
   mode '0644'
   source "#{node['omeka']['location'] + node['omeka']['version']}.zip"
 end
 
+package 'unzip'
+
 bash 'unzip omeka' do
   user 'root'
   cwd ::File.dirname(omeka_zip)
   code <<-EOH
-    unzip #{::File.basename(omeka_zip)} -C #{::File.dirname(omeka_zip)}" &&
-    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']}
+    unzip -qo #{omeka_zip};
+    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']};
   EOH
-  not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip") }
+  not_if { ::File.directory?(omeka_zip) }
+end
+
+bash 'move files' do
+  cwd ::File.dirname(omeka_zip)
+  code <<-EOH
+    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']};
+  EOH
+  not_if { ::File.directory?(omeka_zip) }
+
 end
 
 template "#{node['omeka']['directory']}db.ini" do
@@ -47,6 +58,7 @@ template "#{node['omeka']['directory']}db.ini" do
     db_charset: node['omeka']['db_charset'],
     db_port: node['omeka']['db_port']
   )
+  action :create
 end
 
 mysql_service 'default' do

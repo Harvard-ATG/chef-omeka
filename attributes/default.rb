@@ -12,5 +12,5 @@ default['omeka']['db_name'] = 'omeka'
 default['omeka']['db_user'] = 'omeka'
 default['omeka']['db_pass'] = 'abc23'
 default['omeka']['db_prefix']   = 'omeka_'
-default['omeka']['db_charset']  = "utf8"
+default['omeka']['db_charset']  = 'utf8'
 default['omeka']['db_port']     = ''

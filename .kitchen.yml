@@ -26,9 +26,5 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[nginx::repo]
-      - recipe[nginx::default]
       - recipe[omeka::default]
     attributes: 
-      nginx:
-        repo_source: nginx

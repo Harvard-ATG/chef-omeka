@@ -11,6 +11,5 @@ describe 'omeka::default' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new.converge(described_recipe)
     end
-
   end
 end

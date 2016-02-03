@@ -7,8 +7,8 @@ long_description 'A helper Stack for running the Omeka (http://omeka.org), softw
 version '0.1.0'
 
 depends 'yum', '~> 3.5.2'
-depends 'ssh', '~> 0.10.10'
 depends 'mysql', '~> 6.1.2'
-depends 'nginx', '~> 2.7.6'
 depends 'php', '~> 1.7.2'
 depends 'zip', '~> 1.1.0'
+depends 'tomcat', '~> 1.0.1'
+depends 'apache'

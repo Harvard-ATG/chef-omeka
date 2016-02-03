@@ -34,3 +34,18 @@ bash 'unzip omeka' do
   EOH
   not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip") }
 end
+
+template "#{node['omeka']['directory']}db.ini" do
+  source 'db.ini.erb'
+  owner node['omeka']['owner']
+  group node['nginx']['user']
+  mode '0444'
+  variables[
+    'db_pass' => node['omeka']['db_pass'],
+    'db_host' => node['omeka']['db_host'],
+    'db_user' => node['omeka']['db_user'],
+    'db_prefix' => node['omeka']['db_prefix'],
+    'db_charset' => node['omeka']['db_charset'],
+    'db_port' => node['omeka']['db_port']
+  ]
+end

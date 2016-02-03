@@ -52,4 +52,3 @@ namespace :integration do
     end
   end
 end
-

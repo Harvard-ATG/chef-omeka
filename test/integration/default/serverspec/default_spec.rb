@@ -12,3 +12,7 @@ describe user('omeka_web') do
   it { should should exist }
   it { should belong_to_group 'www-data' }
 end
+
+describe file('/srv/www/omeka/index.php') do
+  it { should exist }
+end

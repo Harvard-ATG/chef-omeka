@@ -6,6 +6,7 @@
 #
 
 user node['omeka']['user'] do
+  username node['omeka']['user']
   action :create
   comment 'Omeka User'
 end
@@ -29,6 +30,9 @@ end
 bash 'unzip omeka' do
   user 'root'
   cwd ::File.dirname(omeka_zip)
-  code "unzip #{::File.basename(omeka_zip)} -C #{::File.dirname(omeka_zip)}"
+  code <<-EOH
+    unzip #{::File.basename(omeka_zip)} -C #{::File.dirname(omeka_zip)}"
+    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['location']}
+  EOH
   not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp/omeka-'}#{node['omeka']['version']}.zip") }
 end

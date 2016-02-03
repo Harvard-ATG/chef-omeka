@@ -27,22 +27,20 @@ end
 package 'unzip'
 
 bash 'unzip omeka' do
-  user 'root'
+  user node['omeka']['owner']
   cwd ::File.dirname(omeka_zip)
   code <<-EOH
     unzip -qo #{omeka_zip};
-    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']};
   EOH
   not_if { ::File.directory?(omeka_zip) }
 end
 
 bash 'move files' do
+  user node['omeka']['owner']
   cwd ::File.dirname(omeka_zip)
   code <<-EOH
-    mv omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']};
+    mv -f omeka-#{node['omeka']['version']}/* #{node['omeka']['directory']};
   EOH
-  not_if { ::File.directory?(omeka_zip) }
-
 end
 
 template "#{node['omeka']['directory']}db.ini" do
@@ -80,4 +78,10 @@ end
 
 mysql_client 'default' do
   action :create
+end
+
+web_app 'omeka' do
+  server_name node['hostname']
+  docroot node['omeka']['directory']
+  cookbook 'apache2'
 end

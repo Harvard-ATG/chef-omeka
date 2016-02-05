@@ -13,6 +13,8 @@ provisioner:
 
 platforms:
   - name: centos
+    run_list:
+      - recipe[yum]
     driver_config:
       image: centos
       platform: rhel
@@ -26,8 +28,13 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[apache2::default]
+      - recipe[apache2]
+      - recipe[apache2::mod_rewrite]
+      - recipe[apache2::mod_expires]
+      - recipe[apache2::mod_ssl]
       - recipe[omeka::default]
     attributes: 
+      machine_fqdn: working.computers.biz
+      machine_fqdn_as_hostname: true
       apache2:
-        default_modules:['mod_rewrite']
+        listen_ports: ["80", "443"]

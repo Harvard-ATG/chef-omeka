@@ -5,7 +5,6 @@
 # Copyright (c) 2016 Harvard ATG, All Rights Reserved.
 #
 
-
 mysql_service 'default' do
   port '3306'
   version '5.5'

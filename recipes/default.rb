@@ -59,7 +59,6 @@ template "#{node['omeka']['directory']}db.ini" do
   action :create
 end
 
-
 # Install the mysql client.
 
 mysql_client 'default' do

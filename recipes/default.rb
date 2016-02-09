@@ -64,7 +64,6 @@ end
 # Install php support for mysql
 # APC and dependacies
 #
-bash
 
 case node['platform_family']
 when 'rhel', 'fedora'

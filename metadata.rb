@@ -6,6 +6,7 @@ description 'A helper for a LAMP Stack running Omeka'
 long_description 'A helper Stack for running the Omeka (http://omeka.org), software stack'
 version '0.1.0'
 
+depends 'build-essential', '~> 2.2.4'
 depends 'yum', '~> 3.5.2'
 depends 'mysql', '~> 6.1.2'
 depends 'php', '~> 1.7.2'

@@ -11,7 +11,7 @@ end
 
 directory node['omeka']['directory'] do
   owner node['omeka']['owner']
-  group node['apac']['owner']
+  group node['apache']['owner']
   mode '0755'
   recursive true
   action :create
@@ -63,15 +63,14 @@ end
 
 # Install php support for mysql
 # APC and dependacies
+#
+bash
+
 case node['platform_family']
 when 'rhel', 'fedora'
   %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
     package pkg do
       action :install
-    end
-    php_pear 'memcache' do
-      action :install
-      # directives(:shm_size => "128M", :enable_cli => 0)
     end
   end
 when 'debian'

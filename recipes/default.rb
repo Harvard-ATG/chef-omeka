@@ -65,7 +65,7 @@ end
 # APC and dependacies
 case node['platform_family']
 when 'rhel', 'fedora'
-  %w( zlib-devel httpd-devel pcre pcre-devel ).each do |pkg|
+  %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
     package pkg do
       action :install
     end

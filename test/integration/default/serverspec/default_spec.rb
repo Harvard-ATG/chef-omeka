@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-services = %w(mysql php-fpm nginx)
+services = %w(apache2 mysql)
 
 services.each do |s|
   describe service(s) do
@@ -9,10 +9,10 @@ services.each do |s|
 end
 
 describe user('omeka_web') do
-  it { should should exist }
+  it { should exist }
 end
 
-files %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini)
+files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini)
 
 files.each do |file|
   describe file(file) do

@@ -13,10 +13,14 @@ provisioner:
 platforms:
   - name: centos-7.0
     run_list:
-    - recipe[yum]
+      - recipe[yum]
+    network:
+    - ["forwarded_port", {guest: 80, host: 8080}]
   - name: ubuntu-14.04
     run_list:
       - recipe[apt]
+    network:
+    - ["forwarded_port", {guest: 80, host: 8080}]
 
 suites:
   - name: default
@@ -28,6 +32,7 @@ suites:
       - recipe[apache2::mod_ssl]
       - recipe[apache2::mod_php5]
       - recipe[omeka::default]
+      - recipe[omeka::mysql_server]
     attributes: 
       machine_fqdn: working.computers.biz
       machine_fqdn_as_hostname: true

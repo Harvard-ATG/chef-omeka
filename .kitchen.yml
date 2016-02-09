@@ -11,18 +11,12 @@ provisioner:
     #   name: inspec
 
 platforms:
-  - name: centos
+  - name: centos-7.0
     run_list:
-      - recipe[yum]
-    driver_config:
-      image: centos
-      platform: rhel
-  - name: ubuntu
+    - recipe[yum]
+  - name: ubuntu-14.04
     run_list:
       - recipe[apt]
-    driver_config:
-      image: ubuntu
-      platform: debian
 
 suites:
   - name: default

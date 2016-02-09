@@ -16,3 +16,7 @@ end
 describe file('/srv/www/omeka/index.php') do
   it { should exist }
 end
+
+describe file('/srv/www/omeka/.htaccess') do
+  it { should exist }
+end

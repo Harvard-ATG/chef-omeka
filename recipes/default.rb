@@ -26,11 +26,13 @@ end
 
 package 'unzip'
 
+omeka_unzip_folder = "omeka-#{node['omeka']['version']}"
+
 bash 'unzip omeka' do
-  user node['omeka']['owner']
   cwd ::File.dirname(omeka_zip)
   code <<-EOH
     unzip -qo #{omeka_zip};
+    chown -R #{node['omeka']['owner']} #{omeka_unzip_folder}
   EOH
   not_if { ::File.directory?(omeka_zip) }
 end

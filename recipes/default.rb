@@ -11,7 +11,7 @@ end
 
 directory node['omeka']['directory'] do
   owner node['omeka']['owner']
-  group node['omeka']['owner']
+  group node['apac']['owner']
   mode '0755'
   recursive true
   action :create
@@ -61,7 +61,48 @@ directory "#{node['omeka']['directory']}files" do
   action :create
 end
 
+# Install php support for mysql
+# APC and dependacies
+case node['platform_family']
+when 'rhel', 'fedora'
+  %w( zlib-devel httpd-devel pcre pcre-devel ).each do |pkg|
+    package pkg do
+      action :install
+    end
+    php_pear 'memcache' do
+      action :install
+      # directives(:shm_size => "128M", :enable_cli => 0)
+    end
+  end
+when 'debian'
+  %w( php5-memcache php5-gd php5-mysql ).each do |pkg|
+    package pkg do
+      action :upgrade
+    end
+  end
+end
+
+# APC and dependacies
+php_pear 'apc' do
+  action :install
+  directives(
+    shm_segments: node['omeka']['apc']['shm_segments'],
+    shm_size: node['omeka']['apc']['shm_size '],
+    ttl: node['omeka']['apc']['ttl'],
+    user_ttl: node['omeka']['apc']['user_ttl'],
+    enable_cli: node['omeka']['apc']['enable_cli'],
+    stat: node['omeka']['apc']['stat'],
+    stat_ctime: node['omeka']['apc']['stat_ctime'],
+    lazy_classes: node['omeka']['apc']['lazy_classes'],
+    lazy_functions: node['omeka']['apc']['lazy_functions'],
+    write_lock: node['omeka']['apc']['write_lock'],
+    rfc1867: node['omeka']['apc']['rfc1867']
+  )
+  only_if node['php']['version'].to_f > 5.5
+end
+
 # Install the mysql client.
+#
 
 mysql_client 'default' do
   action :create

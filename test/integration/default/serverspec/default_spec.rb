@@ -10,13 +10,20 @@ end
 
 describe user('omeka_web') do
   it { should should exist }
-  it { should belong_to_group 'www-data' }
 end
 
-describe file('/srv/www/omeka/index.php') do
-  it { should exist }
+files %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini)
+
+files.each do |file|
+  describe file(file) do
+    it { should exist }
+  end
 end
 
-describe file('/srv/www/omeka/.htaccess') do
-  it { should exist }
+ports = %w(80, 443)
+
+ports.each do |port|
+  describe port (port) do
+    it { should be_listening }
+  end
 end

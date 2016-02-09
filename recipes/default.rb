@@ -81,10 +81,11 @@ when 'debian'
 end
 
 # APC and dependacies
+=begin
 php_pear 'apc' do
   action :install
   directives(
-    shm_segments: node['omeka']['apc']['shm_segments'],
+#    shm_segments: node['omeka']['apc']['shm_segments'],
     shm_size: node['omeka']['apc']['shm_size '],
     ttl: node['omeka']['apc']['ttl'],
     user_ttl: node['omeka']['apc']['user_ttl'],
@@ -99,8 +100,13 @@ php_pear 'apc' do
   only_if node['php']['version'].to_f > 5.5
 end
 
+=end
+
 # Install the mysql client.
 #
+if node['omeka']['install_local_mysql_server']
+  include_recipe 'omeka::mysql_server'
+end
 
 mysql_client 'default' do
   action :create
@@ -109,5 +115,8 @@ end
 web_app 'omeka' do
   server_name node['hostname']
   docroot node['omeka']['directory']
+  allow_override 'All'
+  directory_index 'false'
   cookbook 'apache2'
+  notifies :reload, 'service[apache2]', :delayed
 end

@@ -14,6 +14,7 @@ default['omeka']['db_pass'] = 'abc23'
 default['omeka']['db_prefix'] = 'omeka_'
 default['omeka']['harset'] = 'utf8'
 default['omeka']['db_port'] = ''
+default['omeka']['install_local_mysql_server'] = true
 
 # php apc values
 default['omeka']['apc']['shm_segments']	= '2'

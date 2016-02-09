@@ -1,13 +1,5 @@
 require 'spec_helper'
 
-services = %w(apache2 mysql)
-
-services.each do |s|
-  describe service(s) do
-    it { should be_enabled }
-  end
-end
-
 describe user('omeka_web') do
   it { should exist }
 end

@@ -1,5 +1,6 @@
 Harvard ATG's omeka cookbook
 =============================
+[![Build Status](https://travis-ci.org/Harvard-ATG/chef-omeka.svg?branch=master)](https://travis-ci.org/Harvard-ATG/chef-omeka)
 
 omeka (0.1.0) A helper for a LAMP Stack running Omeka
 

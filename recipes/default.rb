@@ -61,6 +61,16 @@ directory "#{node['omeka']['directory']}files" do
   action :create
 end
 
+omeka_dirs = %w(fullsize original square_thumbnails theme_uploads thumbnails)
+omeka_dirs.each do |omeka_dir|
+  directory "#{node['omeka']['directory']}files/#{omeka_dir}" do
+    owner node['apache']['user']
+    group node['omeka']['owner']
+    mode '0755'
+    action :create
+  end
+end
+
 # Install php support for mysql
 # APC and dependacies
 #

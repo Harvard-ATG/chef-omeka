@@ -104,13 +104,14 @@ end
 
 # Install the mysql client.
 #
-if node['omeka']['install_local_mysql_server']
-  include_recipe 'omeka::mysql_server'
-end
+
+include_recipe 'omeka::mysql_server' if node['omeka']['install_local_mysql_server']
 
 mysql_client 'default' do
   action :create
 end
+
+include_recipe 'omeka::database' if node['omeka']['create_db']
 
 web_app 'omeka' do
   server_name node['hostname']

@@ -12,9 +12,12 @@ default['omeka']['db_name'] = 'omeka'
 default['omeka']['db_user'] = 'omeka'
 default['omeka']['db_pass'] = 'abc123'
 default['omeka']['db_prefix'] = 'omeka_'
-default['omeka']['harset'] = 'utf8'
+default['omeka']['db_charset'] = 'utf8'
+default['omeka']['db_socket'] = '/var/run/mysqld/mysqld.sock'
+
 default['omeka']['db_port'] = ''
 default['omeka']['install_local_mysql_server'] = true
+default['omeka']['create_db'] = true
 
 # php apc values
 default['omeka']['apc']['shm_segments']	= '2'

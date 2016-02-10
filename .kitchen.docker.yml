@@ -34,15 +34,19 @@ platforms:
 
 
 suites:
+suites:
   - name: default
     run_list:
+      - recipe[build-essential]
+      - recipe[php::default]
       - recipe[apache2]
       - recipe[apache2::mod_rewrite]
       - recipe[apache2::mod_expires]
       - recipe[apache2::mod_ssl]
+      - recipe[apache2::mod_php5]
       - recipe[omeka::default]
     attributes: 
-      machine_fqdn: working.computers.biz
+      machine_fqdn: omeka.dev
       machine_fqdn_as_hostname: true
       apache2:
         listen_ports: ["80", "443"]

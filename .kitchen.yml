@@ -14,13 +14,15 @@ platforms:
   - name: centos-7.0
     run_list:
       - recipe[yum]
-    network:
-    - ["forwarded_port", {guest: 80, host: 8080}]
+    driver_config:
+      network:
+      - ["forwarded_port", {guest: 80, host: 8080}]
   - name: ubuntu-14.04
     run_list:
       - recipe[apt]
-    network:
-    - ["forwarded_port", {guest: 80, host: 8081}]
+    driver_config:
+      network:
+      - ["forwarded_port", {guest: 80, host: 8081}]
 
 suites:
   - name: default
@@ -34,7 +36,7 @@ suites:
       - recipe[apache2::mod_php5]
       - recipe[omeka::default]
     attributes: 
-      machine_fqdn: working.computers.biz
+      machine_fqdn: omeka.dev
       machine_fqdn_as_hostname: true
       apache2:
         listen_ports: ["80", "443"]

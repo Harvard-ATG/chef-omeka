@@ -117,6 +117,5 @@ web_app 'omeka' do
   docroot node['omeka']['directory']
   allow_override 'All'
   directory_index 'false'
-  cookbook 'apache2'
   notifies :reload, 'service[apache2]', :delayed
 end

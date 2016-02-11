@@ -1,29 +1,47 @@
 Harvard ATG's omeka cookbook
 =============================
-[![Build Status](https://travis-ci.org/Harvard-ATG/chef-omeka.svg?branch=master)](https://travis-ci.org/Harvard-ATG/chef-omeka)
 
-omeka (0.1.0) A helper for a LAMP Stack running Omeka
+omeka (0.2.0) A helper for a LAMP Stack running Omeka
 
-A helper Stack for running the Omeka (http://omeka.org), software stack
+A helper Stack for running the Omeka (http://omeka.org), software stack.
+
+It will install bare omeka install at localhost.
+
+If you are running kitchen converge it will forward port 8080 to 80 so you can access it in your local browser.
+
+### To Do
+* Add attributes and themes.
+* Make omeka LWRP so that an instance is an lwap and not just the defualt recipe.
+
 
 Requirements
 ------------
 
 ### Platforms
 
+`centos >= 0.0.0`
+
+`ubuntu >= 0.0.0`
+
 ### Dependencies
+
+`build-essential ~> 2.2.4`
 
 `yum ~> 3.5.2`
 
-`ssh ~> 0.10.10`
-
 `mysql ~> 6.1.2`
-
-`nginx ~> 2.7.6`
 
 `php ~> 1.7.2`
 
 `zip ~> 1.1.0`
+
+`tomcat ~> 1.0.1`
+
+`apache2 >= 0.0.0`
+
+`database >= 1.6.0`
+
+`mysql2_chef_gem ~> 1.0.1`
 
 
 Attributes
@@ -65,7 +83,7 @@ License and Authors
 ------------------
 
 The following engineers have contributed to this code:
- * [Josh Beauregard](https://github.com/sanguis) - 12 commits
+ * [Josh Beauregard](https://github.com/sanguis) - 36 commits
 
 Copyright:: 2016 Harvard ATG
 

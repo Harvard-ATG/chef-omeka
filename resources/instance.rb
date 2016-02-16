@@ -1,25 +1,25 @@
 resource_name :instance
 default_action :create
 
-property :url, String, name_property: true
-property :owner, String
+property :url, String, name_property: true, default_value: node['hostname']
 property :location, String, default: node['omeka']['location']
 property :version, String, default: node['omeka']['version']
-property :directory, String, default_value: '/srv/www/omeka/'
-property :owner, String, default_value: 'omeka_web'
-property :db_host, String, default_value: '127.0.0.1'
-property :db_name, String, default_value: 'omeka'
-property :db_user, String, default_value: 'omeka_user'
-property :db_pass, String, default_value: 'abc123'
-property :db_prefix, String, default_value: 'omeka_'
-property :db_charset, String, default_value: 'utf8'
-property :db_socket, String, default_value: node['omeka']['db_socket']
-property :db_port, String, default_value: node['omeka']['db_port']
-property :install_local_mysql_server, String, default_value: true
-property :create_db, String, default_value: true
-property :is_production, String, default_value: true
+property :directory, String, default: '/srv/www/omeka/'
+property :owner, String, default: 'omeka_web'
+property :db_host, String, default: '127.0.0.1'
+property :db_name, String, default: 'omeka'
+property :db_user, String, default: 'omeka_user'
+property :db_pass, String, default: 'abc123'
+property :db_prefix, String, default: 'omeka_'
+property :db_charset, String, default: 'utf8'
+property :db_socket, String, default: node['omeka']['db_socket']
+property :db_port, String, default: node['omeka']['db_port']
+property :install_local_mysql_server, Trueclass, default: true
+property :create_db, Trueclass, default: true
+property :is_production, Trueclass, default: true
 
 action :create do
+  #Get the files for a server unzip and move
   user owner do
     action :create
     comment "Omeka instance #{url}, owner"
@@ -86,6 +86,8 @@ action :create do
       action :create
     end
   end
+
+  # MySQL
   mysql_client 'default' do
     action :create
   end
@@ -98,8 +100,6 @@ action :create do
   mysql2_chef_gem 'default' do
     action :install
   end
-
-  node.save unless Chef::Config[:solo]
 
   mysql_connection_info = {
     host: db_host,
@@ -127,10 +127,10 @@ action :create do
     privileges    [:all]
     action        :grant
   end
-  include_recipe 'omeka::database' if create_db
 
+# Apache vhost
   web_app 'omeka' do
-    server_name node['hostname']
+    server_name url
     docroot directory
     allow_override 'All'
     directory_index 'false'

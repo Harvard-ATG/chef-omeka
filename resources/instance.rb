@@ -1,3 +1,6 @@
+resource_name :instance
+default_action :create
+
 property :url, String, name_property: true
 property :owner, String
 property :location, String, default: node['omeka']['location']
@@ -136,8 +139,4 @@ action :create do
 end
 
 action :delete do
-  package 'httpd' do
-    action :delete
-  end
 end
-

@@ -14,12 +14,12 @@ property :db_prefix, String, default: 'omeka_'
 property :db_charset, String, default: 'utf8'
 property :db_socket, String, default: node['omeka']['db_socket']
 property :db_port, String, default: node['omeka']['db_port']
-property :install_local_mysql_server, Trueclass, default: true
-property :create_db, Trueclass, default: true
-property :is_production, Trueclass, default: true
+property :install_local_mysql_server, [true, false], default: true
+property :create_db, [true, false], default: true
+property :is_production, [true, false], default: true
 
 action :create do
-  #Get the files for a server unzip and move
+  # Get the files for a server unzip and move
   user owner do
     action :create
     comment "Omeka instance #{url}, owner"
@@ -128,7 +128,7 @@ action :create do
     action        :grant
   end
 
-# Apache vhost
+  # Apache vhost
   web_app 'omeka' do
     server_name url
     docroot directory

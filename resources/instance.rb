@@ -98,9 +98,7 @@ action :create do
   end
 
   # MySQL
-  mysql_client 'default' do
-    action :create
-  end
+  include_recipe 'omeka::mysql_server' if install_local_mysql_server
 
   mysql_client 'default' do
     action :create

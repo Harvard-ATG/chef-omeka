@@ -69,14 +69,15 @@ action :create do
     mode '0444'
     action :create
     varibles(
-      :db_host => db_host,
-      :db_user => db_user,
-      :db_pass => db_pass,
-      :db_name => db_name,
-      :db_prefix => db_prefix,
-      :db_charset => db_charset,
-      :db_port => db_port,
+      db_host: db_host,
+      db_user: db_user,
+      db_pass: db_pass,
+      db_name: db_name,
+      db_prefix: db_prefix,
+      db_charset: db_charset,
+      db_port: db_port
     )
+    cookbook 'omkea'
   end
 
   directory "#{directory}files" do

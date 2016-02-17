@@ -4,6 +4,7 @@ settings:
 driver:
   name: docker
   privileged: true
+  use_sudo: false
 
 platforms:
 - name: centos-6
@@ -34,7 +35,6 @@ platforms:
 
 
 suites:
-suites:
   - name: default
     run_list:
       - recipe[build-essential]
@@ -44,7 +44,7 @@ suites:
       - recipe[apache2::mod_expires]
       - recipe[apache2::mod_ssl]
       - recipe[apache2::mod_php5]
-      - recipe[omeka::default]
+      - recipe[omeka::solo]
     attributes: 
       machine_fqdn: omeka.dev
       machine_fqdn_as_hostname: true

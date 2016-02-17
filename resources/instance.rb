@@ -4,7 +4,7 @@ default_action :create
 property :url, String, name_property: true, default_value: node['hostname']
 property :location, String, default: node['omeka']['location']
 property :version, String, default: node['omeka']['version']
-property :directory, String, default: '/srv/www/omeka/'
+property :dir, String, default: '/srv/www/omeka/'
 property :owner, String, default: 'omeka_web'
 property :db_host, String, default: '127.0.0.1'
 property :db_name, String, default: 'omeka'
@@ -25,7 +25,7 @@ action :create do
     comment "Omeka instance #{url}, owner"
   end
 
-  directory directory do
+  directory dir do
     owner owner
     group node['apache']['owner']
     mode '0755'
@@ -51,7 +51,7 @@ action :create do
     rm -rf #{omeka_unzip_folder}/db.ini;
     chown -R #{owner} #{omeka_unzip_folder}
     EOH
-    not_if { ::File.directory?(omeka_zip) }
+    not_if { ::File.dir?(omeka_zip) }
   end
 
   bash 'copy files' do
@@ -59,16 +59,16 @@ action :create do
     cwd ::File.dirname(omeka_zip)
     code <<-EOH
     shopt -s dotglob;
-    cp -r #{omeka_unzip_folder}/* #{directory};
+    cp -r #{omeka_unzip_folder}/* #{dir};
     EOH
   end
 
-  template "#{directory}db.ini" do
+  template "#{dir}db.ini" do
     source 'db.ini.erb'
     owner owner
     mode '0444'
     action :create
-    varibles(
+    variables(
       db_host: db_host,
       db_user: db_user,
       db_pass: db_pass,
@@ -80,7 +80,7 @@ action :create do
     cookbook 'omkea'
   end
 
-  directory "#{directory}files" do
+  directory "#{dir}files" do
     owner node['apache']['user']
     group owner
     mode '0755'
@@ -89,7 +89,7 @@ action :create do
 
   omeka_dirs = %w(fullsize original square_thumbnails theme_uploads thumbnails)
   omeka_dirs.each do |omeka_dir|
-    directory "#{directory}files/#{omeka_dir}" do
+    directory "#{dir}files/#{omeka_dir}" do
       owner node['apache']['user']
       group owner
       mode '0755'
@@ -141,7 +141,7 @@ action :create do
   # Apache vhost
   web_app 'omeka' do
     server_name url
-    docroot directory
+    docroot dir
     allow_override 'All'
     directory_index 'false'
     notifies :reload, 'service[apache2]', :delayed

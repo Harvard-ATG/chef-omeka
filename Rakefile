@@ -30,6 +30,7 @@ namespace :integration do
   desc 'Run Test Kitchen with Docker'
   task :docker do
     Kitchen.logger = Kitchen.default_file_logger
+    @loader = Kitchen::Loader::YAML.new(project_config: './.kitchen.docker.yml')
     Kitchen::Config.new.instances.each do |instance|
       instance.test(:always)
     end

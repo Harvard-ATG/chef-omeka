@@ -21,6 +21,9 @@ platforms:
   - name: ubuntu-14.04
     driver:
       image_id: ami-fce3c696
+  - name: amazon-linux
+    driver:
+      image_id: ami-8fcee4e5
 
 suites:
   - name: default

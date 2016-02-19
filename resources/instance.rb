@@ -2,10 +2,11 @@ resource_name :instance
 default_action :create
 
 property :url, String, name_property: true, default_value: node['hostname']
+property :alieas, Array
 property :location, String, default: node['omeka']['location']
 property :version, String, default: node['omeka']['version']
 property :dir, String, default: '/srv/www/omeka/'
-property :owner, String, default: 'omeka_web'
+property :instance_owner, String, default: 'omeka_web'
 property :db_host, String, default: '127.0.0.1'
 property :db_name, String, default: 'omeka'
 property :db_user, String, default: 'omeka_user'
@@ -20,13 +21,13 @@ property :is_production, [true, false], default: true
 
 action :create do
   # Get the files for a server unzip and move
-  user owner do
+  user instance_owner do
     action :create
-    comment "Omeka instance #{url}, owner"
+    comment "Omeka instance #{url}, instance_owner"
   end
 
   directory dir do
-    owner owner
+    owner instance_owner
     group node['apache']['owner']
     mode '0755'
     recursive true
@@ -35,7 +36,7 @@ action :create do
 
   omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp'}/omeka-#{version}.zip"
   remote_file omeka_zip do
-    owner owner
+    owner instance_owner
     mode '0644'
     source "#{location + version}.zip"
   end
@@ -49,13 +50,13 @@ action :create do
     code <<-EOH
     unzip -qo #{omeka_zip};
     rm -rf #{omeka_unzip_folder}/db.ini;
-    chown -R #{owner} #{omeka_unzip_folder}
+    chown -R #{instance_owner} #{omeka_unzip_folder}
     EOH
     not_if { ::File.dir?(omeka_zip) }
   end
 
   bash 'copy files' do
-    user owner
+    user instance_owner
     cwd ::File.dirname(omeka_zip)
     code <<-EOH
     shopt -s dotglob;
@@ -65,7 +66,7 @@ action :create do
 
   template "#{dir}db.ini" do
     source 'db.ini.erb'
-    owner owner
+    owner instance_owner
     mode '0444'
     action :create
     variables(
@@ -82,7 +83,7 @@ action :create do
 
   directory "#{dir}files" do
     owner node['apache']['user']
-    group owner
+    group instance_owner
     mode '0755'
     action :create
   end
@@ -91,7 +92,7 @@ action :create do
   omeka_dirs.each do |omeka_dir|
     directory "#{dir}files/#{omeka_dir}" do
       owner node['apache']['user']
-      group owner
+      group instance_owner
       mode '0755'
       action :create
     end
@@ -142,7 +143,7 @@ action :create do
     docroot dir
     allow_override 'All'
     directory_index 'false'
-    notifies :reload, 'service[apache2]', :delayed
+#    notifies :reload, 'service[apache2]', :delayed
   end
 end
 

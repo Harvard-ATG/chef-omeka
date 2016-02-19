@@ -3,12 +3,7 @@ driver:
   name: ec2
   require_chef_omnibus: true
   instance_type: t2.micro
-  block_device_mappings:
-    - ebs_device_name: /dev/sda1
-      ebs_volume_type: standard
-      ebs_virtual_name: test
-      ebs_volume_size: 50
-      ebs_delete_on_termination: true
+
 transport:
   ssh_key: /home/atg/.ssh/id_rsa
   connection_timeout: 10
@@ -23,16 +18,9 @@ provisioner:
 #   name: inspec
 
 platforms:
-    - name: redhat-7.2
-      driver:
-        image_id: ami-2051294a
-      transport:
-        username: root
-    - name: ubuntu-14.04
-      driver:
-        image_id: ami-fce3c696
-      transport:
-        username: ubuntu
+  - name: ubuntu-14.04
+    driver:
+      image_id: ami-fce3c696
 
 suites:
   - name: default

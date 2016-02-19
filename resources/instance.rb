@@ -99,7 +99,22 @@ action :create do
   end
 
   # MySQL
-  include_recipe 'omeka::mysql_server' if install_local_mysql_server
+  if install_local_mysql_server
+    #server
+    mysql_service 'default' do
+      port db_port
+      version '5.6'
+      initial_root_password db_pass
+      socket db_socket
+      action [:create, :start]
+    end
+
+    mysql_config 'default' do
+      source 'mysite.cnf.erb'
+      notifies :restart, 'mysql_service[default]'
+      action :create
+    end
+  end
 
   mysql_client 'default' do
     action :create
@@ -143,7 +158,7 @@ action :create do
     docroot dir
     allow_override 'All'
     directory_index 'false'
-#    notifies :reload, 'service[apache2]', :delayed
+    notifies :reload, 'service[apache2]', :delayed
   end
 end
 

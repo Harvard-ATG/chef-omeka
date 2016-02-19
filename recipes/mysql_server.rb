@@ -6,10 +6,10 @@
 #
 
 mysql_service 'default' do
-  port node['omeka']['db_port']
+  port db_port
   version '5.6'
-  initial_root_password node['omeka']['db_pass']
-  socket node['omeka']['db_socket']
+  initial_root_password db_pass
+  socket db_socket
   action [:create, :start]
 end
 

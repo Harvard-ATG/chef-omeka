@@ -24,6 +24,14 @@ action :create do
     action :create
     comment "Omeka instance #{url}, owner"
   end
+  
+  
+  neatline_zip = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{node['omeka']['plugins']['neatline']}.zip"
+  remote_file neatline_zip do
+    owner node['omeka']['owner']
+    mode '0644'
+    source "#{node['omeka']['plugins']['location'] + node['omeka']['plugins']['neatline']}.zip"
+  end
 
   directory dir do
     owner owner

@@ -12,10 +12,16 @@ files.each do |file|
   end
 end
 
-ports = %w(80, 443)
+ports = %w(443 80)
 
 ports.each do |port|
   describe port (port) do
     it { should be_listening }
+  end
+end
+
+describe 'MySQL config parameters' do
+  mysql_config('socket') do
+    its(:value) { should eq '/var/run/mysqld/mysqld.sock' }
   end
 end

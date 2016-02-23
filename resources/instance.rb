@@ -25,7 +25,6 @@ action :create do
     action :create
     comment "Omeka instance #{url}, instance_owner"
   end
-
   directory dir do
     owner instance_owner
     group node['apache']['owner']
@@ -41,8 +40,6 @@ action :create do
     source "#{location + version}.zip"
   end
 
-  package 'unzip'
-
   omeka_unzip_folder = "omeka-#{version}"
 
   bash 'unzip omeka' do
@@ -52,7 +49,7 @@ action :create do
     rm -rf #{omeka_unzip_folder}/db.ini;
     chown -R #{instance_owner} #{omeka_unzip_folder}
     EOH
-    not_if { ::File.dir?(omeka_zip) }
+    not_if { ::File.directory?(omeka_zip) }
   end
 
   bash 'copy files' do
@@ -78,7 +75,7 @@ action :create do
       db_charset: db_charset,
       db_port: db_port
     )
-    cookbook 'omkea'
+    cookbook 'omeka'
   end
 
   directory "#{dir}files" do
@@ -100,11 +97,11 @@ action :create do
 
   # MySQL
   if install_local_mysql_server
-    #server
+    # server
     mysql_service 'default' do
       port db_port
       version '5.6'
-      initial_root_password db_pass
+      initial_root_password node['omeka']['db_root_pass']
       socket db_socket
       action [:create, :start]
     end
@@ -129,7 +126,7 @@ action :create do
     host: db_host,
     username: 'root',
     socket: db_socket,
-    password: db_pass
+    password: node['omeka']['db_root_pass']
   }
 
   mysql_database db_name do
@@ -151,9 +148,8 @@ action :create do
     privileges    [:all]
     action        :grant
   end
-
   # Apache vhost
-  web_app 'omeka' do
+  apache2_web_app url do
     server_name url
     docroot dir
     allow_override 'All'

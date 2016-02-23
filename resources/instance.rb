@@ -2,7 +2,7 @@ resource_name :instance
 default_action :create
 
 property :url, String, name_property: true, default_value: node['hostname']
-property :alieas, Array
+property :aliaes, Array
 property :location, String, default: node['omeka']['location']
 property :version, String, default: node['omeka']['version']
 property :dir, String, default: '/srv/www/omeka/'
@@ -148,11 +148,13 @@ action :create do
     privileges    [:all]
     action        :grant
   end
+
+  # Web Server configuration
   case node['omeka']['webserver']
   when 'apache'
-    # Apache vhost
     web_app url do
       server_name url
+      server_aliases aliaes
       cookbook_name 'apache2'
       docroot dir
       allow_override 'All'

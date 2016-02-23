@@ -148,13 +148,18 @@ action :create do
     privileges    [:all]
     action        :grant
   end
-  # Apache vhost
-  apache2_web_app url do
-    server_name url
-    docroot dir
-    allow_override 'All'
-    directory_index 'false'
-    notifies :reload, 'service[apache2]', :delayed
+  case node['omeka']['webserver']
+  when 'apache'
+    # Apache vhost
+    web_app url do
+      server_name url
+      cookbook_name 'apache2'
+      docroot dir
+      allow_override 'All'
+      directory_index 'false'
+      notifies :reload, 'service[apache2]', :delayed
+    end
+
   end
 end
 

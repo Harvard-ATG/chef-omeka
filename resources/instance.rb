@@ -152,7 +152,7 @@ action :create do
   # Web Server configuration
   case node['omeka']['webserver']
   when 'apache2'
-    template "#{node['apache']['dir']}/sites-enabled/#{url}" do
+    template "#{node['apache']['dir']}/sites-enabled/#{url}.conf" do
       source 'web_app.conf.erb'
       owner 'root'
       group node['apache']['root_group']
@@ -164,6 +164,7 @@ action :create do
         allow_override: 'All',
         directory_index: 'false'
       )
+      notifies :reload, Chef.run_context.resource_collection.find('service[apache2]')
     end
   when 'nginx'
     # TODO: create nginx vhost file

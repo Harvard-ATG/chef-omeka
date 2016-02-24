@@ -6,5 +6,7 @@
 #
 
 # TODO: temp package adding, waitng for lib resource
-package 'unzip'
+package 'unzip' do
+  notifies :reload, 'service[apache2]', :delayed
+end
 instance 'omeka.dev'

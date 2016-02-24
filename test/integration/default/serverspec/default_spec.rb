@@ -13,7 +13,7 @@ describe user('omeka_web') do
   it { should exist }
 end
 
-files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini /etc/httpd/sites/enabled/omeka.dev)
+files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini /etc/httpd/sites-enabled/omeka.dev)
 
 files.each do |file|
   describe file(file) do

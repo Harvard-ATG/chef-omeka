@@ -15,11 +15,6 @@
   <% end -%>
   </Directory>
 
-  <Directory />
-    Options FollowSymLinks
-    AllowOverride None
-  </Directory>
-
   <Location /server-status>
     SetHandler server-status
 
@@ -38,12 +33,12 @@
   LogLevel info rewrite:trace1
   <%- else -%>
   LogLevel info
-  RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
+  RewriteLog <%= node['apache']['log_dir'] %>/<%= @server_name %>-rewrite.log
   RewriteLogLevel 0
   <%- end -%>
 
-  ErrorLog <%= node['apache']['log_dir'] %>/<%= @name %>-error.log
-  CustomLog <%= node['apache']['log_dir'] %>/<%= @name %>-access.log combined
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @server_name %>-error.log
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @server_name%>-access.log combined
 
   <% if @directory_index -%>
   DirectoryIndex <%= [@directory_index].flatten.join " " %>

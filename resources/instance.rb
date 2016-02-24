@@ -21,9 +21,10 @@ property :is_production, [true, false], default: true
 
 action :create do
   # Get the files for a server unzip and move
+  #
   user instance_owner do
     action :create
-    comment "Omeka instance #{url}, instance_owner"
+    comment 'Omeka instance_owner'
   end
   directory dir do
     owner instance_owner
@@ -151,21 +152,21 @@ action :create do
   # Web Server configuration
   case node['omeka']['webserver']
   when 'apache2'
-    template "#{node['apache']['config_dir']}/sites-enabled/#{url}" do
-      source 'web_app.cnf.erb'
+    template "#{node['apache']['dir']}/sites-enabled/#{url}" do
+      source 'web_app.conf.erb'
       owner 'root'
       group node['apache']['root_group']
-      node '0644'
+      mode '0644'
       variables(
         server_name: url,
         server_aliases: aliaes,
         docroot: dir,
-        allow_overrides: 'All',
+        allow_override: 'All',
         directory_index: 'false'
       )
     end
   when 'nginx'
-    #TODO: create nginx vhost file
+    # TODO: create nginx vhost file
   end
 end
 

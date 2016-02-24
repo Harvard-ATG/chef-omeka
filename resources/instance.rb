@@ -1,46 +1,6 @@
 resource_name :instance
 default_action :create
 
-def get_files(url, file)
-  extension = /\.([\w\.]*$)/.match(url)
-  
-  temp_file = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{file}.#{extension[1]}"
-  
-  remote_file file do
-    owner owner
-    mode '0644'
-    source "#{url}"
-  end
-  
-    
-  case "#{extension[1]}"
-  when "tar.gz"
-    puts 'This is a tar gzip!!'
-    
-  when "zip"
-    puts 'This is a zip!'
-    
-    bash 'unzip file' do
-      cwd ::File.dirname(omeka_zip)
-      code <<-EOH
-      unzip -qo #{omeka_zip};
-      rm -rf #{omeka_unzip_folder}/db.ini;
-      chown -R #{owner} #{omeka_unzip_folder}
-      EOH
-      not_if { ::File.dir?(omeka_zip) }
-      
-  when "git"
-    puts 'This is a git repo!!'
-    
-  else
-    puts "This is something else!"
-    
-  end
-  
-end
-
-
-
 property :url, String, name_property: true, default_value: node['hostname']
 property :aliaes, Array
 property :location, String, default: node['omeka']['location']

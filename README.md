@@ -3,6 +3,8 @@ Harvard ATG's omeka cookbook
 
 omeka (0.2.0) A helper for a LAMP Stack running Omeka
 
+[![Build Status](https://travis-ci.org/Harvard-ATG/chef-omeka.svg?branch=master)](https://travis-ci.org/Harvard-ATG/chef-omeka)
+
 A helper Stack for running the Omeka (http://omeka.org), software stack.
 
 It will install bare omeka install at localhost.
@@ -83,7 +85,7 @@ License and Authors
 ------------------
 
 The following engineers have contributed to this code:
- * [Josh Beauregard](https://github.com/sanguis) - 36 commits
+ * [Josh Beauregard](https://github.com/sanguis) - 57 commits
 
 Copyright:: 2016 Harvard ATG
 

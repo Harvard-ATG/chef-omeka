@@ -4,6 +4,8 @@ maintainer_email 'josh_beauregard@harvard.edu'
 license 'MIT License'
 description 'A helper for a LAMP Stack running Omeka'
 long_description <<-EOH
+[![Build Status](https://travis-ci.org/Harvard-ATG/chef-omeka.svg?branch=master)](https://travis-ci.org/Harvard-ATG/chef-omeka)
+
 A helper Stack for running the Omeka (http://omeka.org), software stack.
 
 It will install bare omeka install at localhost.

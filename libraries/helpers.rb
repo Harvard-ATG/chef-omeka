@@ -3,6 +3,7 @@ def get_files(url, file, destination)
   full_url = "#{url}/#{file}"
   # "temp_file = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{file}.#{extension[1]}"
 
+  puts(/\.([\w\.]*$)/.match(file))
   case /\.([\w\.]*$)/.match(file)
   when 'tar.gz'
     puts 'This is a tar gzip!!'
@@ -19,10 +20,9 @@ def get_files(url, file, destination)
     bash "Unzip #{file}" do
       cwd ::File.dirname(file_arch)
       code <<-EOH
-      unzip -d #{destination} -qo #{file};
-      chown -R #{owner} #{omeka_unzip_folder}
+        unzip -d #{destination} -qo #{file};
       EOH
-      not_if { ::File.dir?(omeka_zip) }
+      not_if { ::File.readable(file) }
     end
 
   when 'git'

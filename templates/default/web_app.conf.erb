@@ -1,13 +1,12 @@
-<VirtualHost *:<%= @params[:server_port] || node['apache']['listen_ports'].first %>>
-  ServerName <%= @params[:server_name] %>
-  <% if @params[:server_aliases] -%>
-  ServerAlias <%= @params[:server_aliases].join " " %>
+<VirtualHost *:<%= node['apache']['listen_ports'].first %>>
+  ServerName <%= @server_name %>
+  <% if @server_aliases -%>
+  ServerAlias <%= @server_aliases.join " " %>
   <% end -%>
-  DocumentRoot <%= @params[:docroot] %>
+  DocumentRoot <%= @docroot %>
 
-  <Directory <%= @params[:docroot] %>>
-    Options <%= [@params[:directory_options] || "FollowSymLinks" ].flatten.join " " %>
-    AllowOverride <%= [@params[:allow_override] || "None" ].flatten.join " " %>
+  <Directory <%= @docroot %>>
+    AllowOverride <%= [@allow_override || "None" ].flatten.join " " %>
   <% if node['apache']['version'] == '2.4' -%>
     Require all granted
   <% else -%>
@@ -43,10 +42,10 @@
   RewriteLogLevel 0
   <%- end -%>
 
-  ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
-  CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @name %>-error.log
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @name %>-access.log combined
 
-  <% if @params[:directory_index] -%>
-  DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>
+  <% if @directory_index -%>
+  DirectoryIndex <%= [@directory_index].flatten.join " " %>
   <% end -%>
 </VirtualHost>

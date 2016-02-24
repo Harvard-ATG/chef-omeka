@@ -148,20 +148,24 @@ action :create do
     privileges    [:all]
     action        :grant
   end
-
   # Web Server configuration
   case node['omeka']['webserver']
-  when 'apache'
-    web_app url do
-      server_name url
-      server_aliases aliaes
-      cookbook_name 'apache2'
-      docroot dir
-      allow_override 'All'
-      directory_index 'false'
-      notifies :reload, 'service[apache2]', :delayed
+  when 'apache2'
+    template "#{node['apache']['config_dir']}/sites-enabled/#{url}" do
+      source 'web_app.cnf.erb'
+      owner 'root'
+      group node['apache']['root_group']
+      node '0644'
+      variables(
+        server_name: url,
+        server_aliases: aliaes,
+        docroot: dir,
+        allow_overrides: 'All',
+        directory_index: 'false'
+      )
     end
-
+  when 'nginx'
+    #TODO: create nginx vhost file
   end
 end
 

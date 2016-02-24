@@ -36,14 +36,7 @@ default['omeka']['apc']['rfc1867'] = '1'
 # Source of Plugins: http://omeka.org/add-ons/plugins/
 # they are all zipped and the extension will be added at the end
 default['omeka']['plugins']['location'] = "http://omeka.org/wordpress/wp-content/uploads/"
-default['omeka']['plugins']['neatline'] = "Neatline-2.5.1"
-default['omeka']['plugins']['neatlinefeatures'] = "NeatlineFeatures-2.0.5"
-default['omeka']['plugins']['neatlinesimile'] = "Neatline-Widget-SIMILE-Timeline-2.0.4"
-default['omeka']['plugins']['neatlinetext'] = "Neatline-Widget-Text-1.1.0"
-default['omeka']['plugins']['neatlinetime'] = "Neatline-Time-2.1.0"
-default['omeka']['plugins']['neatlinewaypoints'] = "Neatline-Widget-Waypoints-2.0.2"
-default['omeka']['plugins']['universalviewer'] = "UniversalViewer-2.2"
-default['omeka']['plugins']['iiif'] = "IIIF-1.0"
+default['omeka']['plugins']["list"] = ("Neatline-2.5.1","NeatlineFeatures-2.0.5", "Neatline-Widget-SIMILE-Timeline-2.0.4", "Neatline-Widget-Text-1.1.0", "Neatline-Time-2.1.0", "Neatline-Widget-Waypoints-2.0.2", "UniversalViewer-2.2", "IIIF-1.0")
 
 
 

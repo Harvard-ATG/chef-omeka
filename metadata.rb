@@ -26,7 +26,6 @@ depends 'apache2'
 depends 'database', '>= 1.6.0'
 depends 'mysql2_chef_gem', '~> 1.0.1'
 
-
 supports 'centos'
 supports 'ubuntu'
 

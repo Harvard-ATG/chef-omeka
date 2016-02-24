@@ -60,6 +60,21 @@ property :create_db, [true, false], default: true
 property :is_production, [true, false], default: true
 
 action :create do
+  # get php ready
+  case node['platform_family']
+  when 'rhel', 'fedora'
+    %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
+      package pkg do
+        action :install
+      end
+    end
+  when 'debian'
+    %w( php5-memcache php5-gd php5-mysql ).each do |pkg|
+      package pkg do
+        action :upgrade
+      end
+    end
+  end
   # Get the files for a server unzip and move
   #
   user instance_owner do
@@ -192,7 +207,7 @@ action :create do
   # Web Server configuration
   case node['omeka']['webserver']
   when 'apache2'
-    template "#{node['apache']['dir']}/sites-enabled/#{url}" do
+    template "#{node['apache']['dir']}/sites-enabled/#{url}.conf" do
       source 'web_app.conf.erb'
       owner 'root'
       group node['apache']['root_group']
@@ -204,6 +219,7 @@ action :create do
         allow_override: 'All',
         directory_index: 'false'
       )
+      notifies :reload, Chef.run_context.resource_collection.find('service[apache2]')
     end
   when 'nginx'
     # TODO: create nginx vhost file

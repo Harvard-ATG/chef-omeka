@@ -18,6 +18,8 @@ property :db_port, String, default: node['omeka']['db_port']
 property :install_local_mysql_server, [true, false], default: true
 property :create_db, [true, false], default: true
 property :is_production, [true, false], default: true
+property :plugins_location, String, default: node['omeka']['plugins']['location']
+property :plugins_list, Array, default: node['omeka']['plugins']['list']
 
 action :create do
   # get php ready
@@ -111,6 +113,10 @@ action :create do
     end
   end
 
+  # Get Omeka Plugins.
+  plugins_list.each do |p|
+    get_files(plugins_location, p, "#{dir}plugins")
+  end
   # MySQL
   if install_local_mysql_server
     # server

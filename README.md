@@ -85,7 +85,8 @@ License and Authors
 ------------------
 
 The following engineers have contributed to this code:
- * [Josh Beauregard](https://github.com/sanguis) - 57 commits
+ * [Josh Beauregard](https://github.com/sanguis) - 66 commits
+ * [William Barthelmy](https://github.com/bilbe) - 3 commits
 
 Copyright:: 2016 Harvard ATG
 

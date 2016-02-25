@@ -23,13 +23,16 @@ def unpack_archive(url, file, destination)
     source "#{url}/#{file}"
     not_if File.readable?(file)
   end
-  extract = case File.extname(file)
-            when '.tar.gz' then "tar-xC #{destination} -f #{file};"
-            when 'zip' then "unzip -d #{destination} -qo #{file};"
-            end
   bash "Extract #{file}" do
     cwd ::File.dirname("#{Chef::Config['file_cache_path'] || '/tmp'}/#{file}")
-    code   extract
-    not_if { ::File.readable(file) }
+    code extract(file, destination)
+    only_if ::File.readable?(file)
+  end
+end
+
+def extract(file, destination)
+  case File.extname(file)
+  when '.tar.gz' then "tar-xC #{destination} -f #{file};"
+  when 'zip' then "unzip -d #{destination} -qo #{file};"
   end
 end

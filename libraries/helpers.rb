@@ -36,5 +36,5 @@ def extract(file, destination)
   when '.tar.gz' then "tar-xC #{destination} -f #{file}"
   when '.zip' then "unzip -d #{destination} -qo #{file}"
   else "Echo 'I dont know how to handle #{file} with extension #{File.extname(file)}.'"
-  end 
+  end
 end

@@ -16,6 +16,7 @@ def get_files(url, file, destination)
 end
 
 def unpack_archive(url, file, destination)
+  puts extract(file, destination)
   remote_file "#{Chef::Config['file_cache_path'] || '/tmp'}/#{file}" do
     owner 'root'
     group 'root'
@@ -25,14 +26,15 @@ def unpack_archive(url, file, destination)
   end
   bash "Extract #{file}" do
     cwd ::File.dirname("#{Chef::Config['file_cache_path'] || '/tmp'}/#{file}")
-    code extract(file, destination)
+    code extract(file, destination).to_s
     only_if ::File.readable?(file)
   end
 end
 
 def extract(file, destination)
   case File.extname(file)
-  when '.tar.gz' then "tar-xC #{destination} -f #{file};"
-  when 'zip' then "unzip -d #{destination} -qo #{file};"
-  end
+  when '.tar.gz' then "tar-xC #{destination} -f #{file}"
+  when '.zip' then "unzip -d #{destination} -qo #{file}"
+  else "Echo 'I dont know how to handle #{file} with extension #{File.extname(file)}.'"
+  end 
 end

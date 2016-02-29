@@ -2,10 +2,10 @@ require 'spec_helper'
 
 files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini /srv/www/omeka/plugins/Neatline/NeatlinePlugin.php)
 case os[:family]
-when ubuntu
-  files << "/etc/apache2/sites-enabled/omeka.dev.conf" 
+when 'ubuntu'
+  files << '/etc/apache2/sites-enabled/omeka.dev.conf'
 when 'redhat'
-  files << "/etc/httpd/sites-enabled/omeka.dev.conf" 
+  files << '/etc/httpd/sites-enabled/omeka.dev.conf'
 end
 
 files.each do |file|

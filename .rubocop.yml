@@ -1,2 +1,8 @@
 Metrics/LineLength:
-    Max: 160
+  Max: 160
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false

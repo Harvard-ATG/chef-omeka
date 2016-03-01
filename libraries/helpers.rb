@@ -11,7 +11,7 @@ def get_files(url, file, destination)
       user node['apache']['user']
       action :sync
     end
-  else fail ArgumentError, "dunno how to handle #{file}"
+  else raise ArgumentError, "dunno how to handle #{file}"
   end
 end
 
@@ -35,6 +35,6 @@ def extract(file, destination)
   case File.extname(file)
   when '.tar.gz' then "tar-xC #{destination} -f #{file}"
   when '.zip' then "unzip -d #{destination} -qo #{file}"
-  else "Echo 'I dont know how to handle #{file} with extension #{File.extname(file)}.'"
+  else raise ArgumentError, "dunno know how to handle #{file} with extension #{File.extname(file)}."
   end
 end

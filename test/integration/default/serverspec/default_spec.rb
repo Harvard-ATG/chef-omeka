@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini /srv/www/omeka/plugins/Neatline/NeatlinePlugin.php)
+files = %w(/srv/www/omeka/index.php /srv/www/omeka/.htaccess /srv/www/omeka/db.ini /srv/www/omeka/plugins/Neatline/NeatlinePlugin.php /srv/www/omeka/themes/berlin/index.php)
 case os[:family]
 when 'ubuntu'
   files << '/etc/apache2/sites-enabled/omeka.dev.conf'

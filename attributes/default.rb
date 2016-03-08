@@ -23,5 +23,9 @@ default['omeka']['is_production'] = true
 
 # omeka plugins
 # Source of Plugins: http://omeka.org/add-ons/plugins/
-default['omeka']['plugins']['location'] = 'http://omeka.org/wordpress/wp-content/uploads'
-default['omeka']['plugins']['list'] = []
+default['omeka']['addons']['location'] = 'http://omeka.org/wordpress/wp-content/uploads'
+default['omeka']['addons']['plugins'] = []
+
+
+#omeka themes
+default['omeka']['addons']['themes'] = []

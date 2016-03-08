@@ -15,6 +15,19 @@ If you are running kitchen converge it will forward port 8080 to 80 so you can a
 ### To Do
 * Add attributes and themes.
 * Make omeka LWRP so that an instance is an lwap and not just the defualt recipe.
+
+Test Kitchen
+============
+Test kitchen is setup using the kitchen docker-driver. Install it with:
+```
+chef gem install kitchen-docker
+```
+
+Port forwarding.
+The 3 boxes created by test kitchen have the bellow port 80 forwarding.
+Ubuntu 14.04, 8081
+CentOS 7, 8082
+CentOS 6, 8080
 EOH
 version '0.2.0'
 

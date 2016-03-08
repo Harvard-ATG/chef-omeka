@@ -122,7 +122,7 @@ action :create do
   themes_list.each do |p|
     get_files(addons_location, p, "#{dir}themes")
   end
-  
+
   # MySQL
   if install_local_mysql_server
     # server

@@ -26,6 +26,5 @@ default['omeka']['is_production'] = true
 default['omeka']['addons']['location'] = 'http://omeka.org/wordpress/wp-content/uploads'
 default['omeka']['addons']['plugins'] = []
 
-
-#omeka themes
+# omeka themes
 default['omeka']['addons']['themes'] = []

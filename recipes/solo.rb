@@ -5,7 +5,8 @@
 # Copyright (c) 2016 Harvard ATG, All Rights Reserved.
 #
 # TODO: temp package adding, waitng for lib resource
-package 'unzip'
+include_recipe 'omeka::default'
+
 instance 'omeka.dev' do
   notifies :reload, 'service[apache2]', :delayed
 end

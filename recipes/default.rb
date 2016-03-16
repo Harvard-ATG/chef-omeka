@@ -6,6 +6,7 @@
 #
 packages = %w(unzip tar imagemagick)
 packages.each do |p|
-  package p
-  action :install
+  package p do
+    action :install
+  end
 end

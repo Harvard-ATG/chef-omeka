@@ -29,7 +29,7 @@ Ubuntu 14.04, 8081
 CentOS 7, 8082
 CentOS 6, 8080
 EOH
-version '0.2.0'
+version '0.2.2'
 
 depends 'build-essential', '~> 2.2.4'
 depends 'yum', '~> 3.5.2'

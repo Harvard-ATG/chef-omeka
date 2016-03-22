@@ -11,13 +11,6 @@ guard :foodcritic, cookbook_paths: '.', cli: ['--epic-fail', 'any'] do
   watch('metadata.rb')
 end
 
-# ChefSpec tests
-guard :rspec, cmd: 'bundle exec rspec', all_on_start: true do
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^(recipes)/(.+)\.rb$})   { |m| "spec/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')      { 'spec' }
-end
-
 # For guard-kitchen - if you like that sort of thing.
 guard 'kitchen', cli: ['-c'] do
   watch(%r{test/.+})

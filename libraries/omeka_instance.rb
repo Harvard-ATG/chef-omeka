@@ -29,18 +29,18 @@ module OmekaInstance
     attribute(:plugins_list, kind_of: Array, default: lazy { node['omeka']['addons']['plugins'] })
     attribute(:themes_list, kind_of: Array, default: lazy { node['omeka']['addons']['themes'] })
 
-    def dir
-      new_resource.url if new_resource.dir.empty?
-    end
   end
 
   class Provider < Chef::Provider
     include Poise
     provides(:omeka_instance)
 
+    def dir
+      "/srv/www/#{new_resource.url}/" if new_resource.dir.nil?
+    end
     def action_create
       # get php ready
-      case lazy { node['platform_family'] }
+      case node['platform_family']
       when 'rhel', 'fedora'
         %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
           package pkg do
@@ -63,7 +63,7 @@ module OmekaInstance
 
       directory dir do
         owner new_resource.instance_owner
-        group lazy { node['apache']['owner'] }
+        group node['apache']['owner']
         mode '0755'
         recursive true
         action :create
@@ -115,7 +115,7 @@ module OmekaInstance
       end
 
       directory "#{dir}files" do
-        owner lazy { node['apache']['user'] }
+        owner node['apache']['user']
         group new_resource.instance_owner
         mode '0755'
         action :create
@@ -124,7 +124,7 @@ module OmekaInstance
       omeka_dirs = %w(fullsize original square_thumbnails theme_uploads thumbnails)
       omeka_dirs.each do |omeka_dir|
         directory "#{dir}files/#{omeka_dir}" do
-          owner lazy { node['apache']['user'] }
+          owner node['apache']['user']
           group new_resource.instance_owner
           mode '0755'
           action :create
@@ -146,7 +146,7 @@ module OmekaInstance
         mysql_service 'default' do
           port new_resource.db_port
           version '5.6'
-          initial_root_password lazy { node['omeka']['db_root_pass'] }
+          initial_root_password node['omeka']['db_root_pass']
           socket new_resource.db_socket
           action [:create, :start]
         end
@@ -160,7 +160,7 @@ module OmekaInstance
 
       mysql_client 'default' do
         action :create
-        not_if { lazy { node['platform_family'] } == 'windows' }
+        not_if { node['platform_family'] } == 'windows'
       end
 
       mysql2_chef_gem 'default' do
@@ -171,7 +171,7 @@ module OmekaInstance
         host: new_resource.db_host,
         username: 'root',
         socket: new_resource.db_socket,
-        password: lazy { node['omeka']['db_root_pass'] }
+        password: node['omeka']['db_root_pass']
       }
 
       mysql_database new_resource.db_name do
@@ -194,12 +194,12 @@ module OmekaInstance
         action        :grant
       end
       # Web Server configuration
-      case lazy { node['omeka']['webserver'] }
+      case node['omeka']['webserver']
       when 'apache2'
-        template "#{lazy { node['apache']['dir'] }}/sites-enabled/#{new_resource.url}.conf" do
+        template "#{node['apache']['dir']}/sites-enabled/#{new_resource.url}.conf" do
           source 'web_app.conf.erb'
           owner 'root'
-          group lazy { node['apache']['root_group'] }
+          group node['apache']['root_group']
           mode '0644'
           variables(
             server_name: new_resource.url,

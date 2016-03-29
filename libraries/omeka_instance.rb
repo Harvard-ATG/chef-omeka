@@ -12,7 +12,6 @@ module OmekaInstance
     attribute(:aliaes, Array)
     attribute(:location, String, default: lazy { node['omeka']['location'] })
     attribute(:version, String, default: lazy { node['omeka']['version'] })
-    attribute(:dir, String, default: '/srv/www/omeka/')
     attribute(:instance_owner, String, default: 'omeka_web')
     attribute(:db_host, String, default: '127.0.0.1')
     attribute(:db_name, String, default: 'omeka')
@@ -27,6 +26,11 @@ module OmekaInstance
     attribute(:is_production, [true, false], default: true)
     attribute(:addons_location, String, default: lazy { node['omeka']['addons']['location'] })
     attribute(:plugins_list, Array, default: lazy { node['omeka']['addons']['plugins'] })
+    attribute(:themes_list, Array, default: lazy { node['omeka']['addons']['themes'] })
+  end
+
+  def dir
+    new_resource.url
   end
 
   class Provider < Chef::Provider
@@ -51,39 +55,39 @@ module OmekaInstance
       end
       # Get the files for a server unzip and move
       #
-      user instance_owner do
+      user new_resource.instance_owner do
         action :create
-        comment 'Omeka instance_owner'
+        comment 'Omeka new_resource.instance_owner'
       end
       directory dir do
-        owner instance_owner
+        owner new_resource.instance_owner
         group lazy { node['apache']['owner'] }
         mode '0755'
         recursive true
         action :create
       end
 
-      omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp'}/omeka-#{version}.zip"
+      omeka_zip = "#{Chef::Config['file_cache_path'] || '/tmp'}/omeka-#{new_resource.version}.zip"
       remote_file omeka_zip do
-        owner instance_owner
+        owner new_resource.instance_owner
         mode '0644'
-        source "#{location + version}.zip"
+        source "#{new_resource.location + new_resource.version}.zip"
       end
 
-      omeka_unzip_folder = "omeka-#{version}"
+      omeka_unzip_folder = "omeka-#{new_resource.version}"
 
       bash 'unzip omeka' do
         cwd ::File.dirname(omeka_zip)
         code <<-EOH
         unzip -qo #{omeka_zip};
         rm -rf #{omeka_unzip_folder}/db.ini;
-        chown -R #{instance_owner} #{omeka_unzip_folder}
+        chown -R #{new_resource.instance_owner} #{omeka_unzip_folder}
         EOH
         not_if { ::File.directory?(omeka_zip) }
       end
 
       bash 'copy files' do
-        user instance_owner
+        user new_resource.instance_owner
         cwd ::File.dirname(omeka_zip)
         code <<-EOH
         shopt -s dotglob;
@@ -93,24 +97,24 @@ module OmekaInstance
 
       template "#{dir}db.ini" do
         source 'db.ini.erb'
-        owner instance_owner
+        owner new_resource.instance_owner
         mode '0444'
         action :create
         variables(
-          db_host: db_host,
-          db_user: db_user,
-          db_pass: db_pass,
-          db_name: db_name,
-          db_prefix: db_prefix,
-          db_charset: db_charset,
-          db_port: db_port
+          db_host: new_resource.db_host,
+          db_user: new_resource.db_user,
+          db_pass: new_resource.db_pass,
+          db_name: new_resource.db_name,
+          db_prefix: new_resource.db_prefix,
+          db_charset: new_resource.db_charset,
+          db_port: new_resource.db_port
         )
         cookbook 'omeka'
       end
 
       directory "#{dir}files" do
         owner lazy { node['apache']['user'] }
-        group instance_owner
+        group new_resource.instance_owner
         mode '0755'
         action :create
       end
@@ -119,29 +123,29 @@ module OmekaInstance
       omeka_dirs.each do |omeka_dir|
         directory "#{dir}files/#{omeka_dir}" do
           owner lazy { node['apache']['user'] }
-          group instance_owner
+          group new_resource.instance_owner
           mode '0755'
           action :create
         end
       end
 
       # Get Omeka Plugins.
-      plugins_list.each do |p|
-        get_files(addons_location, p, "#{dir}plugins")
+      new_resource.plugins_list.each do |p|
+        get_files(new_resource.addons_location, p, "#{dir}plugins")
       end
       # Get Omeka These.
-      themes_list.each do |p|
-        get_files(addons_location, p, "#{dir}themes")
+      new_resource.themes_list.each do |p|
+        get_files(new_resource.addons_location, p, "#{dir}themes")
       end
 
       # MySQL
-      if install_local_mysql_server
+      if new_resource.install_local_mysql_server
         # server
         mysql_service 'default' do
-          port db_port
+          port new_resource.db_port
           version '5.6'
           initial_root_password lazy { node['omeka']['db_root_pass'] }
-          socket db_socket
+          socket new_resource.db_socket
           action [:create, :start]
         end
 
@@ -162,42 +166,42 @@ module OmekaInstance
       end
 
       mysql_connection_info = {
-        host: db_host,
+        host: new_resource.db_host,
         username: 'root',
-        socket: db_socket,
+        socket: new_resource.db_socket,
         password: lazy { node['omeka']['db_root_pass'] }
       }
 
-      mysql_database db_name do
+      mysql_database new_resource.db_name do
         connection  mysql_connection_info
         action      :create
       end
 
-      mysql_database_user db_user do
+      mysql_database_user new_resource.db_user do
         connection    mysql_connection_info
-        password      db_pass
-        host          db_host
-        database_name db_name
+        password      new_resource.db_pass
+        host          new_resource.db_host
+        database_name new_resource.db_name
         action        :create
       end
 
-      mysql_database_user db_user do
+      mysql_database_user new_resource.db_user do
         connection    mysql_connection_info
-        database_name db_name
+        database_name new_resource.db_name
         privileges    [:all]
         action        :grant
       end
       # Web Server configuration
       case lazy { node['omeka']['webserver'] }
       when 'apache2'
-        template "#{lazy { node['apache']['dir'] }}/sites-enabled/#{url}.conf" do
+        template "#{lazy { node['apache']['dir'] }}/sites-enabled/#{new_resource.url}.conf" do
           source 'web_app.conf.erb'
           owner 'root'
           group lazy { node['apache']['root_group'] }
           mode '0644'
           variables(
-            server_name: url,
-            server_aliases: aliaes,
+            server_name: new_resource.url,
+            server_aliases: new_resource.aliaes,
             docroot: dir,
             allow_override: 'All',
             directory_index: 'false'

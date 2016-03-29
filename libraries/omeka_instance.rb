@@ -8,10 +8,10 @@ module OmekaInstance
     provides(:omeka_instance)
     actions(:create)
 
-    attribute(:url, String, name_property: true, default_value: node['hostname'])
+    attribute(:url, String, name_property: true, default_value: lazy { node['hostname'] })
     attribute(:aliaes, Array)
-    attribute(:location, String, default: node['omeka']['location'])
-    attribute(:version, String, default: node['omeka']['version'])
+    attribute(:location, String, default: lazy { node['omeka']['location'] })
+    attribute(:version, String, default: lazy { node['omeka']['version'] })
     attribute(:dir, String, default: '/srv/www/omeka/')
     attribute(:instance_owner, String, default: 'omeka_web')
     attribute(:db_host, String, default: '127.0.0.1')
@@ -20,13 +20,13 @@ module OmekaInstance
     attribute(:db_pass, String, default: 'abc123')
     attribute(:db_prefix, String, default: 'omeka_')
     attribute(:db_charset, String, default: 'utf8')
-    attribute(:db_socket, String, default: node['omeka']['db_socket'])
-    attribute(:db_port, String, default: node['omeka']['db_port'])
+    attribute(:db_socket, String, default: lazy { node['omeka']['db_socket'] })
+    attribute(:db_port, String, default: lazy { node['omeka']['db_port'] })
     attribute(:install_local_mysql_server, [true, false], default: true)
     attribute(:create_db, [true, false], default: true)
     attribute(:is_production, [true, false], default: true)
-    attribute(:addons_location, String, default: node['omeka']['addons']['location'])
-    attribute(:plugins_list, Array, default: node['omeka']['addons']['plugins'])
+    attribute(:addons_location, String, default: lazy { node['omeka']['addons']['location'] })
+    attribute(:plugins_list, Array, default: lazy { node['omeka']['addons']['plugins'] })
   end
 
   class Provider < Chef::Provider
@@ -35,7 +35,7 @@ module OmekaInstance
 
     def action_create
       # get php ready
-      case node['platform_family']
+      case lazy { node['platform_family'] }
       when 'rhel', 'fedora'
         %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
           package pkg do
@@ -57,7 +57,7 @@ module OmekaInstance
       end
       directory dir do
         owner instance_owner
-        group node['apache']['owner']
+        group lazy { node['apache']['owner'] }
         mode '0755'
         recursive true
         action :create
@@ -109,7 +109,7 @@ module OmekaInstance
       end
 
       directory "#{dir}files" do
-        owner node['apache']['user']
+        owner lazy { node['apache']['user'] }
         group instance_owner
         mode '0755'
         action :create
@@ -118,7 +118,7 @@ module OmekaInstance
       omeka_dirs = %w(fullsize original square_thumbnails theme_uploads thumbnails)
       omeka_dirs.each do |omeka_dir|
         directory "#{dir}files/#{omeka_dir}" do
-          owner node['apache']['user']
+          owner lazy { node['apache']['user'] }
           group instance_owner
           mode '0755'
           action :create
@@ -140,7 +140,7 @@ module OmekaInstance
         mysql_service 'default' do
           port db_port
           version '5.6'
-          initial_root_password node['omeka']['db_root_pass']
+          initial_root_password lazy { node['omeka']['db_root_pass'] }
           socket db_socket
           action [:create, :start]
         end
@@ -154,7 +154,7 @@ module OmekaInstance
 
       mysql_client 'default' do
         action :create
-        not_if { node['platform_family'] == 'windows' }
+        not_if { lazy { node['platform_family'] } == 'windows' }
       end
 
       mysql2_chef_gem 'default' do
@@ -165,7 +165,7 @@ module OmekaInstance
         host: db_host,
         username: 'root',
         socket: db_socket,
-        password: node['omeka']['db_root_pass']
+        password: lazy { node['omeka']['db_root_pass'] }
       }
 
       mysql_database db_name do
@@ -188,12 +188,12 @@ module OmekaInstance
         action        :grant
       end
       # Web Server configuration
-      case node['omeka']['webserver']
+      case lazy { node['omeka']['webserver'] }
       when 'apache2'
-        template "#{node['apache']['dir']}/sites-enabled/#{url}.conf" do
+        template "#{lazy { node['apache']['dir'] }}/sites-enabled/#{url}.conf" do
           source 'web_app.conf.erb'
           owner 'root'
-          group node['apache']['root_group']
+          group lazy { node['apache']['root_group'] }
           mode '0644'
           variables(
             server_name: url,

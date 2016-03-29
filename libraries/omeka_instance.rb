@@ -8,10 +8,11 @@ module OmekaInstance
     provides(:omeka_instance)
     actions(:create)
 
-    attribute(:url, kind_of: String, name_property: true, default_value: lazy { node['hostname'] })
+    attribute(:url, kind_of: String, default: lazy { name })
     attribute(:aliaes, kind_of: Array)
     attribute(:location, kind_of: String, default: lazy { node['omeka']['location'] })
     attribute(:version, kind_of: String, default: lazy { node['omeka']['version'] })
+    attribute(:dir, kind_of: String)
     attribute(:instance_owner, kind_of: String, default: 'omeka_web')
     attribute(:db_host, kind_of: String, default: '127.0.0.1')
     attribute(:db_name, kind_of: String, default: 'omeka')
@@ -27,10 +28,10 @@ module OmekaInstance
     attribute(:addons_location, kind_of: String, default: lazy { node['omeka']['addons']['location'] })
     attribute(:plugins_list, kind_of: Array, default: lazy { node['omeka']['addons']['plugins'] })
     attribute(:themes_list, kind_of: Array, default: lazy { node['omeka']['addons']['themes'] })
-  end
 
-  def dir
-    new_resource.url
+    def dir
+      new_resource.url if new_resource.dir.empty?
+    end
   end
 
   class Provider < Chef::Provider
@@ -59,6 +60,7 @@ module OmekaInstance
         action :create
         comment 'Omeka new_resource.instance_owner'
       end
+
       directory dir do
         owner new_resource.instance_owner
         group lazy { node['apache']['owner'] }

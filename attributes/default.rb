@@ -28,3 +28,5 @@ default['omeka']['addons']['plugins'] = []
 
 # omeka themes
 default['omeka']['addons']['themes'] = []
+
+default['omeka']['postfix'] = true

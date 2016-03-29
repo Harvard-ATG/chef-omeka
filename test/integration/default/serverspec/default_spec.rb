@@ -8,7 +8,7 @@ files = %w(
   /srv/www/omeka/themes/berlin/index.php
 )
 
-services = %w(mysqld_default)
+services = %w(mysqld_default postfix)
 
 case os[:family]
 when 'ubuntu'

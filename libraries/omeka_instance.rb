@@ -3,6 +3,9 @@ require 'chef/resource'
 require 'chef/provider'
 
 module OmekaInstance
+  ##
+  # Poise Resource for an omeka site instance
+  ##
   class Resource < Chef::Resource
     include Poise
     provides(:omeka_instance)
@@ -30,6 +33,9 @@ module OmekaInstance
     attribute(:themes_list, kind_of: Array, default: lazy { node['omeka']['addons']['themes'] })
   end
 
+  ##
+  # Provider for an omeka site instance
+  ##
   class Provider < Chef::Provider
     include Poise
     provides(:omeka_instance)

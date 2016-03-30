@@ -28,7 +28,6 @@ module OmekaInstance
     attribute(:addons_location, kind_of: String, default: lazy { node['omeka']['addons']['location'] })
     attribute(:plugins_list, kind_of: Array, default: lazy { node['omeka']['addons']['plugins'] })
     attribute(:themes_list, kind_of: Array, default: lazy { node['omeka']['addons']['themes'] })
-
   end
 
   class Provider < Chef::Provider
@@ -38,6 +37,7 @@ module OmekaInstance
     def dir
       "/srv/www/#{new_resource.url}/" if new_resource.dir.nil?
     end
+
     def action_create
       # get php ready
       case node['platform_family']

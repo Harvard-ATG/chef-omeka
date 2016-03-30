@@ -1,23 +1,25 @@
 require 'spec_helper'
 
 files = %w(
-  /srv/www/omeka/index.php
-  /srv/www/omeka/.htaccess
-  /srv/www/omeka/db.ini
-  /srv/www/omeka/plugins/Neatline/NeatlinePlugin.php
-  /srv/www/omeka/themes/berlin/index.php
+  /srv/www/omeka.dev/index.php
+  /srv/www/omeka.dev/.htaccess
+  /srv/www/omeka.dev/db.ini
+  /srv/www/omeka.dev/plugins/Neatline/NeatlinePlugin.php
+  /srv/www/omeka.dev/themes/berlin/index.php
 )
 
-services = %w(mysqld_default)
+services = %w()
 
 case os[:family]
 when 'ubuntu'
   files << '/etc/apache2/sites-enabled/omeka.dev.conf'
+  services << 'mysql-default'
   services << 'apache2'
 
 when 'redhat'
   files << '/etc/httpd/sites-enabled/omeka.dev.conf'
   services << 'httpd'
+  services << 'mysqld-default'
 end
 
 files.each do |file|

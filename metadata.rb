@@ -26,7 +26,7 @@ chef gem install kitchen-docker
 Port forwarding.
 The 3 boxes created by test kitchen have the bellow port 80 forwared.`docker ps`, will list instance and where they are forwared to.
 EOH
-version '0.4.0'
+version '0.4.1'
 
 depends 'build-essential', '~> 2.2.4'
 depends 'yum', '~> 3.5.2'

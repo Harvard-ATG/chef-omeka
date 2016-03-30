@@ -8,7 +8,7 @@ files = %w(
   /srv/www/omeka.dev/themes/berlin/index.php
 )
 
-services = %w()
+services = %w(postfix)
 
 case os[:family]
 when 'ubuntu'

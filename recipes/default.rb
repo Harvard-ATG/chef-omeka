@@ -10,3 +10,5 @@ packages.each do |p|
     action :install
   end
 end
+
+include_recipe('postfix::default') if node['omeka']['postfix']

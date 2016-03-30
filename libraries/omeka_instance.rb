@@ -41,7 +41,7 @@ module OmekaInstance
     provides(:omeka_instance)
 
     def dir
-      "/srv/www/#{new_resource.url}/" if new_resource.dir.nil?
+      new_resource.dir.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
     end
 
     def action_create

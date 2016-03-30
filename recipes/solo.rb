@@ -8,5 +8,6 @@
 include_recipe 'omeka::default'
 
 omeka_instance 'omeka.dev' do
+  dir '/srv/www/omeka.dev/'
   notifies :reload, 'service[apache2]', :delayed
 end

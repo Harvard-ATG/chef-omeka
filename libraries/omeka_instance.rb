@@ -43,10 +43,10 @@ module OmekaInstance
       new_resource.dir.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
     end
     def db_user
-      new_resource.db_user.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
+      new_resource.db_user.nil? ? new_resource.url : new_resource.db_user
     end
     def db_name
-      new_resource.db_name.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
+      new_resource.db_name.nil? ? new_resource.url : new_resource.db_name
     end
 
     def action_create

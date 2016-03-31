@@ -12,10 +12,11 @@ It will install bare omeka install at localhost.
 
 If you are running kitchen converge it will forward port 8080 to 80 so you can access it in your local browser.
 
-### To Do
-* Add attributes and themes.
-* Make omeka LWRP so that an instance is an lwap and not just the defualt recipe.
+## Use
 
+For a single omeka instance just add omeka::solo to your runlist.
+
+For muliple instances you will need to use the `omeka_instance` resource per instance.
 Test Kitchen
 ============
 Test kitchen is setup using the kitchen docker-driver. Install it with:
@@ -26,7 +27,7 @@ chef gem install kitchen-docker
 Port forwarding.
 The 3 boxes created by test kitchen have the bellow port 80 forwared.`docker ps`, will list instance and where they are forwared to.
 EOH
-version '0.4.3'
+version '0.4.4'
 
 depends 'build-essential', '~> 2.2.4'
 depends 'yum', '~> 3.5.2'
@@ -42,3 +43,7 @@ supports 'ubuntu'
 
 issues_url 'https://github.com/Harvard-ATG/chef-omeka/issues'
 source_url 'https://github.com/Harvard-ATG/chef-omeka'
+
+recipe 'omeka::default', 'base requiments for omeka. include in your custom cookbook or add in runlist if using the omkea_instance resource provider'
+recipe 'omeka::solo', 'creates a single omeka instance'
+provides 'omeka_instance[omeka.tld]'

@@ -14,6 +14,7 @@ end
 
 mysql_config 'default' do
   source 'mysite.cnf.erb'
+  cookbook_name 'omeka'
   notifies :restart, 'mysql_service[default]'
   action :create
 end

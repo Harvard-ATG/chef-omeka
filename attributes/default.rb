@@ -18,7 +18,7 @@ default['omeka']['db_charset'] = 'utf8'
 default['omeka']['db_socket'] = '/var/run/mysqld/mysqld.sock'
 default['omeka']['db_port'] = '3306'
 default['omeka']['install_local_mysql_server'] = true
-default['omeka']['create_db'] = true
+default['omeka']['create_local_db'] = true
 default['omeka']['is_production'] = true
 
 # omeka plugins

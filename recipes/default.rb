@@ -11,4 +11,12 @@ packages.each do |p|
   end
 end
 
-include_recipe('postfix::default') if node['omeka']['postfix']
+# condion => recipe
+recipes = {
+  node['omeka']['create_local_db'] => 'omeka::mysql_local',
+  node['omeka']['postfix'] => 'postfix::default'
+}
+
+recipes.each {|c, r|
+  include_recipe(r) if c
+}

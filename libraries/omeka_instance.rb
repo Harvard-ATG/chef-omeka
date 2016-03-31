@@ -147,31 +147,6 @@ module OmekaInstance
       end
 
       # MySQL
-      if new_resource.install_local_mysql_server
-        # server
-        mysql_service 'default' do
-          port new_resource.db_port
-          version '5.6'
-          initial_root_password node['omeka']['db_root_pass']
-          socket new_resource.db_socket
-          action [:create, :start]
-        end
-
-        mysql_config 'default' do
-          source 'mysite.cnf.erb'
-          notifies :restart, 'mysql_service[default]'
-          action :create
-        end
-      end
-
-      mysql_client 'default' do
-        action :create
-        not_if { node['platform_family'] } == 'windows'
-      end
-
-      mysql2_chef_gem 'default' do
-        action :install
-      end
 
       mysql_connection_info = {
         host: new_resource.db_host,

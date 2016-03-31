@@ -1,7 +1,6 @@
 #
 # Cookbook Name:: omeka
-# Recipe:: mysql_server
-#
+# Recipe:: mysql_local
 # Copyright (c) 2016 Harvard ATG, All Rights Reserved.
 #
 
@@ -17,4 +16,12 @@ mysql_config 'default' do
   source 'mysite.cnf.erb'
   notifies :restart, 'mysql_service[default]'
   action :create
+end
+mysql_client 'default' do
+  action :create
+  not_if { node['platform_family'] } == 'windows'
+end
+
+mysql2_chef_gem 'default' do
+  action :install
 end

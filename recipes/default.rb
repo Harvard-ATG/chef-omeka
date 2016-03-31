@@ -17,6 +17,6 @@ recipes = {
   node['omeka']['postfix'] => 'postfix::default'
 }
 
-recipes.each {|c, r|
+recipes.each do |c, r|
   include_recipe(r) if c
-}
+end

@@ -18,14 +18,13 @@ module OmekaInstance
     attribute(:dir, kind_of: String)
     attribute(:instance_owner, kind_of: String, default: 'omeka_web')
     attribute(:db_host, kind_of: String, default: '127.0.0.1')
-    attribute(:db_name, kind_of: String, default: 'omeka')
-    attribute(:db_user, kind_of: String, default: 'omeka_user')
+    attribute(:db_name, kind_of: String)
+    attribute(:db_user, kind_of: String)
     attribute(:db_pass, kind_of: String, default: 'abc123')
     attribute(:db_prefix, kind_of: String, default: 'omeka_')
     attribute(:db_charset, kind_of: String, default: 'utf8')
     attribute(:db_socket, kind_of: String, default: lazy { node['omeka']['db_socket'] })
     attribute(:db_port, kind_of: String, default: lazy { node['omeka']['db_port'] })
-    attribute(:install_local_mysql_server, kind_of: [true, false], default: true)
     attribute(:create_db, kind_of: [true, false], default: true)
     attribute(:is_production, kind_of: [true, false], default: true)
     attribute(:addons_location, kind_of: String, default: lazy { node['omeka']['addons']['location'] })
@@ -42,6 +41,12 @@ module OmekaInstance
 
     def dir
       new_resource.dir.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
+    end
+    def db_user
+      new_resource.db_user.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
+    end
+    def db_name
+      new_resource.db_name.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
     end
 
     def action_create
@@ -80,6 +85,7 @@ module OmekaInstance
         owner new_resource.instance_owner
         mode '0644'
         source "#{new_resource.location + new_resource.version}.zip"
+        only_if { ::File.readable?(omeka_zip) }
       end
 
       omeka_unzip_folder = "omeka-#{new_resource.version}"
@@ -91,7 +97,7 @@ module OmekaInstance
         rm -rf #{omeka_unzip_folder}/db.ini;
         chown -R #{new_resource.instance_owner} #{omeka_unzip_folder}
         EOH
-        not_if { ::File.directory?(omeka_zip) }
+        only_if { ::File.readable?(omeka_zip) }
       end
 
       bash 'copy files' do
@@ -110,14 +116,14 @@ module OmekaInstance
         action :create
         variables(
           db_host: new_resource.db_host,
-          db_user: new_resource.db_user,
+          db_user: db_user,
           db_pass: new_resource.db_pass,
-          db_name: new_resource.db_name,
+          db_name: db_name,
           db_prefix: new_resource.db_prefix,
           db_charset: new_resource.db_charset,
           db_port: new_resource.db_port
         )
-        cookbook 'omeka'
+        cookbook_name 'omeka'
       end
 
       directory "#{dir}files" do
@@ -155,22 +161,22 @@ module OmekaInstance
         password: node['omeka']['db_root_pass']
       }
 
-      mysql_database new_resource.db_name do
+      mysql_database db_name do
         connection  mysql_connection_info
         action      :create
       end
 
-      mysql_database_user new_resource.db_user do
+      mysql_database_user db_user do
         connection    mysql_connection_info
         password      new_resource.db_pass
         host          new_resource.db_host
-        database_name new_resource.db_name
+        database_name db_name
         action        :create
       end
 
-      mysql_database_user new_resource.db_user do
+      mysql_database_user db_user do
         connection    mysql_connection_info
-        database_name new_resource.db_name
+        database_name db_name
         privileges    [:all]
         action        :grant
       end

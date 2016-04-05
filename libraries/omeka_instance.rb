@@ -136,6 +136,17 @@ module OmekaInstance
       new_resource.themes_list.each do |p|
         get_files(new_resource.addons_location, p, "#{dir}themes")
       end
+      
+      bash 'reset theme permissions' do
+        user 'root'
+        cwd dir
+        code "chown -R #{new_resource.instance_owner}:#{new_resource.instance_owner} themes"
+      end
+      bash 'reset plugins permissions' do
+        user 'root'
+        cwd dir
+        code "chown -R #{new_resource.instance_owner}:#{new_resource.instance_owner} themes plugins"
+      end
 
       # MySQL
 

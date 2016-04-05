@@ -20,6 +20,7 @@ default['omeka']['db_port'] = '3306'
 default['omeka']['install_local_mysql_server'] = true
 default['omeka']['create_local_db'] = true
 default['omeka']['is_production'] = true
+default['omeka']['postfix'] = true
 
 # omeka plugins
 # Source of Plugins: http://omeka.org/add-ons/plugins/

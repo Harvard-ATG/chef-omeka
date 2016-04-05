@@ -44,6 +44,6 @@ supports 'ubuntu'
 issues_url 'https://github.com/Harvard-ATG/chef-omeka/issues'
 source_url 'https://github.com/Harvard-ATG/chef-omeka'
 
-recipe 'omeka::default', 'base requiments for omeka. include in your custom cookbook or add in runlist if using the omkea_instance resource provider'
-recipe 'omeka::solo', 'creates a single omeka instance'
+recipe 'omeka::default', 'Base requirements for omeka. Include in your custom cookbook or add in runlist if using the omkea_instance resource provider'
+recipe 'omeka::solo', 'Creates a single omeka instance'
 provides 'omeka_instance[omeka.tld]'

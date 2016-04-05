@@ -11,7 +11,7 @@ recipes = {
 }
 
 recipes.each do |c, r|
-  include_recipe(r) if c
+  include_recipe(r) if c == true
 end
 
 packages = %w(unzip tar imagemagick)

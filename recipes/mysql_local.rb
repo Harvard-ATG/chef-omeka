@@ -5,7 +5,7 @@
 #
 
 mysql_service 'default' do
-  port db_port
+  port node['omeka']['db_port']
   version '5.6'
   initial_root_password node['omeka']['db_root_pass']
   socket node['omeka']['db_socket']
@@ -14,7 +14,7 @@ end
 
 mysql_config 'default' do
   source 'mysite.cnf.erb'
-  cookbook_name 'omeka'
+  cookbook 'omeka'
   notifies :restart, 'mysql_service[default]'
   action :create
 end

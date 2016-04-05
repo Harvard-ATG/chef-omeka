@@ -53,6 +53,7 @@ suites:
       - recipe[omeka::default]
       - recipe[omeka::solo]
     attributes: 
+      poise_debug: true
       machine_fqdn: omeka.dev
       machine_fqdn_as_hostname: true
       apache2:

@@ -43,28 +43,13 @@ module OmekaInstance
       new_resource.dir.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
     end
     def db_user
-      new_resource.db_user.nil? ? new_resource.url : new_resource.db_user
+      new_resource.db_user.nil? ? new_resource.url.gsub('.', '_') : new_resource.db_user
     end
     def db_name
-      new_resource.db_name.nil? ? new_resource.url : new_resource.db_name
+      new_resource.db_name.nil? ? new_resource.url.gsub('.', '_') : new_resource.db_name
     end
 
     def action_create
-      # get php ready
-      case node['platform_family']
-      when 'rhel', 'fedora'
-        %w( zlib-devel httpd-devel pcre pcre-devel php-mysql php-gd ).each do |pkg|
-          package pkg do
-            action :install
-          end
-        end
-      when 'debian'
-        %w( php5-memcache php5-gd php5-mysql ).each do |pkg|
-          package pkg do
-            action :upgrade
-          end
-        end
-      end
       # Get the files for a server unzip and move
       #
       user new_resource.instance_owner do
@@ -85,7 +70,7 @@ module OmekaInstance
         owner new_resource.instance_owner
         mode '0644'
         source "#{new_resource.location + new_resource.version}.zip"
-        only_if { ::File.readable?(omeka_zip) }
+        not_if { ::File.readable?(omeka_zip) }
       end
 
       omeka_unzip_folder = "omeka-#{new_resource.version}"
@@ -123,7 +108,7 @@ module OmekaInstance
           db_charset: new_resource.db_charset,
           db_port: new_resource.db_port
         )
-        cookbook_name 'omeka'
+        cookbook 'omeka'
       end
 
       directory "#{dir}files" do

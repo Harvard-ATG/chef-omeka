@@ -5,6 +5,13 @@
 # Copyright (c) 2016 Harvard ATG, All Rights Reserved.
 #
 packages = %w(unzip tar imagemagick)
+      # get php ready
+      case node['platform_family']
+      when 'rhel', 'fedora'
+        packages.push('zlib-devel', 'httpd-devel', 'pcre', 'pcre-devel', 'php-mysql', 'php-gd')
+      when 'debian'
+        packages.push('php5-memcache', 'php5-gd', 'php5-mysql')
+      end
 packages.each do |p|
   package p do
     action :install

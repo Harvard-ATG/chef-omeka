@@ -43,10 +43,10 @@ module OmekaInstance
       new_resource.dir.nil? ? "/srv/www/#{new_resource.url}/" : new_resource.dir
     end
     def db_user
-      new_resource.db_user.nil? ? new_resource.url.gsub('.', '_') : new_resource.db_user
+      new_resource.db_user.nil? ? new_resource.url.gsub('.', '_')[0,15] : new_resource.db_user[0,15]
     end
     def db_name
-      new_resource.db_name.nil? ? new_resource.url.gsub('.', '_') : new_resource.db_name
+      new_resource.db_name.nil? ? new_resource.url.gsub('.', '_')[0,15] : new_resource.db_name[0,15]
     end
 
     def action_create

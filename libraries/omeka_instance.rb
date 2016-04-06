@@ -191,6 +191,7 @@ module OmekaInstance
             allow_override: 'All',
             directory_index: 'false'
           )
+          cookbook 'omeka'
           notifies :reload, Chef.run_context.resource_collection.find('service[apache2]')
         end
       when 'nginx'

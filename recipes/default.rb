@@ -6,7 +6,7 @@
 #
 
 recipes = {
-  node['omeka']['install_local_mysqll_server'] => 'omeka::mysql_local',
+  node['omeka']['install_local_mysql_server'] => 'omeka::mysql_local',
   node['omeka']['postfix'] => 'postfix::default'
 }
 

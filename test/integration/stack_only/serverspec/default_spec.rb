@@ -24,11 +24,6 @@ services.each do |s|
     it { should be_enabled }
   end
 end
-
-describe user('omeka_web') do
-  it { should exist }
-end
-
 ports = %w(443 80 3306)
 ports.each do |port|
   describe port (port) do
@@ -40,8 +35,4 @@ describe 'MySQL config parameters' do
   mysql_config('socket') do
     its(:value) { should eq '/var/run/mysqld/mysqld.sock' }
   end
-end
-
-describe package('mysql2') do
-  it { should be_installed.by('gem') }
 end

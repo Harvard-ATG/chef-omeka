@@ -1,32 +1,20 @@
----
+settings:
+  parallel: true
+
 driver:
-  name: vagrant
+  name: docker
+  privileged: true
+  use_sudo: false
 
 provisioner:
   name: chef_zero
 
 platforms:
-  - name: ubuntu-14.04
-    run_list:
-      - recipe[apt]
-    driver_config:
-      box: "ubuntu/trusty64"
-      network:
-      - ["forwarded_port", {guest: 80, host: 8081}]
-    cache:
-      auto_detect: true
-      scope: ":box"
-  - name: ubuntu-16.04
-    run_list:
-      - recipe[apt]
-    driver_config:
-      box: "ubuntu/trusty64"
-      network:
-      - ["forwarded_port", {guest: 80, host: 8082}]
-    cache:
-      auto_detect: true
-      scope: ":box"
 - name: centos-6
+  driver:
+    image: centos:6
+    platform: rhel
+    run_command: /sbin/init
     provision_command:
       - /usr/bin/yum install -y initscripts net-tools wget
 - name: centos-7
@@ -38,6 +26,25 @@ platforms:
     run_command: /usr/lib/systemd/systemd
     provision_command:
     - /bin/yum install -y initscripts net-tools wget
+- name: ubuntu-14.04
+  driver:
+    image: ubuntu:14.04
+    platform: ubuntu
+    disable_upstart: false
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+- name: ubuntu-16.04
+  driver:
+    image: ubuntu:16.04
+    platform: ubuntu
+    disable_upstart: false
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+
 
 suites:
   - name: default

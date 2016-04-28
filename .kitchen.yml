@@ -26,18 +26,8 @@ platforms:
     cache:
       auto_detect: true
       scope: ":box"
-- name: centos-6
-    provision_command:
-      - /usr/bin/yum install -y initscripts net-tools wget
-- name: centos-7
-  run_list:
-    - recipe[yum]
-  driver:
-    image: centos:7
-    platform: rhel
-    run_command: /usr/lib/systemd/systemd
-    provision_command:
-    - /bin/yum install -y initscripts net-tools wget
+  - name: centos-6
+  - name: centos-7
 
 suites:
   - name: default

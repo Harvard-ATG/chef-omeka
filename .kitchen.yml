@@ -20,7 +20,7 @@ platforms:
     run_list:
       - recipe[apt]
     driver_config:
-      box: "ubuntu/trusty64"
+      box: "xenial64"
       network:
       - ["forwarded_port", {guest: 80, host: 8082}]
     cache:
@@ -73,3 +73,37 @@ suites:
       machine_fqdn_as_hostname: true
       apache2:
         listen_ports: ["80", "443"]
+  - name: dev
+    driver_config:
+      synced_folders:
+        - ['src', '/srv/www/omeka.dev']
+    run_list:
+      - recipe[php::default]
+      - recipe[apache2]
+      - recipe[apache2::mod_rewrite]
+      - recipe[apache2::mod_ssl]
+      - recipe[apache2::mod_php5]
+      - recipe[omeka::default]
+      - recipe[omeka::solo]
+    attributes: 
+      poise_debug: true
+      machine_fqdn: omeka.dev
+      machine_fqdn_as_hostname: true
+      apache2:
+        listen_ports: ["80", "443"]
+      omeka:
+        owner: vagrant
+        addons:
+          plugins: [
+              'Neatline-2.5.1.zip',
+              'NeatlineFeatures-2.0.5.zip',
+              'Neatline-Widget-SIMILE-Timeline-2.0.4.zip',
+              'Neatline-Widget-Text-1.1.0.zip',
+              'Neatline-Time-2.1.0.zip',
+              'Neatline-Widget-Waypoints-2.0.2.zip',
+              'UniversalViewer-2.2.zip',
+              'IIIF-1.0.zip'
+              ]
+          themes: [
+              'Berlin-2.3.1.zip'
+              ]

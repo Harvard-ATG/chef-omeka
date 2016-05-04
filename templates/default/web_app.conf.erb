@@ -1,4 +1,4 @@
-<VirtualHost *:<%= node['apache']['listen_ports'].first %>>
+<VirtualHost *:<%= node['apache2']['listen_ports'].first %>>
   ServerName <%= @server_name %>
   <% if @server_aliases -%>
   ServerAlias <%= @server_aliases.join " " %>

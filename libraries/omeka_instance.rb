@@ -16,7 +16,7 @@ module OmekaInstance
     attribute(:location, kind_of: String, default: lazy { node['omeka']['location'] })
     attribute(:version, kind_of: String, default: lazy { node['omeka']['version'] })
     attribute(:dir, kind_of: String)
-    attribute(:instance_owner, kind_of: String, default: 'omeka_web')
+    attribute(:instance_owner, kind_of: String, default: lazy { node['omeka']['owner'] })
     attribute(:db_host, kind_of: String, default: '127.0.0.1')
     attribute(:db_name, kind_of: String)
     attribute(:db_user, kind_of: String)

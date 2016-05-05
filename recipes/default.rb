@@ -8,7 +8,7 @@
 include_recipe('omeka::mysql_local') if node['omeka']['install_local_mysql_server'] == true
 include_recipe('postfix::default') if node['omeka']['postfix'] == true
 
-packages = %w(unzip tar imagemagick)
+packages = %w(unzip tar imagemagick git)
 # get php ready
 case node['platform_family']
 when 'rhel', 'fedora'

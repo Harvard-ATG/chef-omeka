@@ -132,11 +132,11 @@ module OmekaInstance
 
       # Get Omeka Plugins.
       new_resource.plugins_list.each do |p|
-        get_files(new_resource.addons_location, p, "#{dir}plugins")
+        get_files(new_resource.addons_location, p, "#{dir}plugins", new_resource.instance_owner)
       end
       # Get Omeka These.
       new_resource.themes_list.each do |p|
-        get_files(new_resource.addons_location, p, "#{dir}themes")
+        get_files(new_resource.addons_location, p, "#{dir}themes", new_resource.instance_owner)
       end
 
       bash 'reset theme permissions' do

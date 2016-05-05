@@ -1,14 +1,14 @@
 # Takes a file and or a url decides if it is a git repo or an archive.
 # Downloads or clones it. to the destination.
 # Do not enter url with trailing slash.
-def get_files(url, file, destination)
+def get_files(url, file, destination, owner = node['apache']['user'])
   case File.extname(file)
   when '.tar.gz', '.zip' then unpack_archive(url, file, destination)
   when '.git'
     git 'destination' do
-      repository "#{url}/#{file}"
+      repository "#{file}"
       reference 'master'
-      user node['apache']['user']
+      user owner
       action :sync
     end
   else raise ArgumentError, "dunno how to handle #{file}"

@@ -21,6 +21,7 @@ platforms:
       - recipe[apt]
     driver_config:
       box: "xenial64"
+      box_url: https://s3.amazonaws.com/atg-vagrant-boxes/xenial64.box
       network:
       - ["forwarded_port", {guest: 80, host: 8082}]
     cache:

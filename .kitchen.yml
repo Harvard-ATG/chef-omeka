@@ -141,5 +141,5 @@ suites:
               ]
           themes: [
               'Berlin-2.3.1.zip',
-              'https://github.com/Harvard-ATG/chef-omeka.git'
+              'https://github.com/Harvard-ATG/ChinaLocal-Omeka-Theme.git'
               ]

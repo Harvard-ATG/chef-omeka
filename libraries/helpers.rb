@@ -5,7 +5,8 @@ def get_files(url, file, destination, owner = node['apache']['user'])
   case File.extname(file)
   when '.tar.gz', '.zip' then unpack_archive(url, file, destination)
   when '.git'
-    git destination do
+    repo = File.basename(file, '.git')
+    git "#{destination}/#{repo}" do
       repository "#{file}"
       reference 'master'
       user owner

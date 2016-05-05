@@ -1,3 +1,4 @@
+langauge: ruby
 sudo: required
 addons:
   apt:

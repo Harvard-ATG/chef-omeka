@@ -114,7 +114,8 @@ suites:
   - name: chinalocal
     driver_config:
       synced_folders:
-        - ['src', '/srv/www/omeka.dev']
+        - ["%{instance_name}_src", '/srv/www/omeka.dev', "create: true, type: nsf"  ]
+        - ["%{instance_name}_src/files", '/srv/www/omeka.dev/files', 'create: true, owned: "www-data"' ]
     run_list:
       - recipe[php::default]
       - recipe[apache2]

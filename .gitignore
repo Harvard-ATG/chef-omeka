@@ -14,4 +14,4 @@ bin/*
 
 .kitchen/
 .kitchen.local.yml
-src/*
+*_src/*

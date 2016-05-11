@@ -115,7 +115,7 @@ suites:
     driver_config:
       synced_folders:
         - ["%{instance_name}_src", '/srv/www/omeka.dev', "create: true"  ]
-        - ["%{instance_name}_src/files", '/srv/www/omeka.dev/files', 'create: true, owned: "www-data"' ]
+        - ["%{instance_name}_src/files", '/srv/www/omeka.dev/files', 'owned: "www-data", mount_options: ["dmode=777", "fmode=666"]']
     run_list:
       - recipe[php::default]
       - recipe[apache2]

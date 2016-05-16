@@ -21,3 +21,15 @@ packages.each do |p|
     action :install
   end
 end
+
+case node['omeka']['webserver']
+when 'apache2'
+  bash 'get mpm setup right' do
+    code <<-EOH
+      a2dismod mpm_event
+      a2enmod mpm_prefork
+    EOH
+    not_if { ::File.exists?('/etc/apache2/mods-enabled/mpm_prefork.conf') }
+    notifies :reload, Chef.run_context.resource_collection.find('service[apache2]') 
+  end
+end

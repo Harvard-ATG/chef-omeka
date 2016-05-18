@@ -113,6 +113,8 @@ suites:
               ]
   - name: chinalocal
     driver_config:
+      box: trusty64-omeka
+      box_url: https://s3.amazonaws.com/atg-vagrant-boxes/trusty64-omeka.box
       synced_folders:
         - ["%{instance_name}_src", '/srv/www/omeka.dev', "create: true"  ]
         - ["%{instance_name}_src/files", '/srv/www/omeka.dev/files', 'owned: "www-data", mount_options: ["dmode=777", "fmode=666"]']

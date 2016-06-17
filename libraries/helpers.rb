@@ -7,7 +7,7 @@ def get_files(url, file, destination, owner = node['apache']['user'])
   when '.git'
     repo = "#{destination}/#{File.basename(file, '.git')}"
     git repo do
-      repository "#{file}"
+      repository file.to_s
       reference 'master'
       user owner
       action :sync

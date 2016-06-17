@@ -50,13 +50,13 @@ module OmekaInstance
     def db_name
       new_resource.db_name.nil? ? new_resource.url.tr('.', '_')[0, 15] : new_resource.db_name[0, 15]
     end
-    
+
     def webserver_user
       case node['omeka']['webserver']
       when 'apache2'
         node['apache']['user']
       when 'nginx'
-        # todo: placeholder for nginx
+        # TODO: placeholder for nginx
       end
     end
 

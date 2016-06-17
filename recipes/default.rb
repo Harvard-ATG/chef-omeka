@@ -29,7 +29,7 @@ when 'apache2'
       a2dismod mpm_event
       a2enmod mpm_prefork
     EOH
-    not_if { ::File.exists?('/etc/apache2/mods-enabled/mpm_prefork.conf') }
-    notifies :reload, Chef.run_context.resource_collection.find('service[apache2]') 
+    not_if { ::File.exist?('/etc/apache2/mods-enabled/mpm_prefork.conf') }
+    notifies :reload, Chef.run_context.resource_collection.find('service[apache2]')
   end
 end

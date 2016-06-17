@@ -50,6 +50,15 @@ module OmekaInstance
     def db_name
       new_resource.db_name.nil? ? new_resource.url.tr('.', '_')[0, 15] : new_resource.db_name[0, 15]
     end
+    
+    def webserver_user
+      case node['omeka']['webserver']
+      when 'apache2'
+        node['apache']['user']
+      when 'nginx'
+        # todo: placeholder for nginx
+      end
+    end
 
     def action_create
       # Get the files for a server unzip and move
@@ -61,7 +70,7 @@ module OmekaInstance
 
       directory dir do
         owner new_resource.instance_owner
-        group node['apache']['owner']
+        group webserver_user
         mode '0755'
         recursive true
         action :create
@@ -114,7 +123,7 @@ module OmekaInstance
       end
 
       directory "#{dir}files" do
-        owner node['apache']['user']
+        owner webserver_user
         group new_resource.instance_owner
         mode '0755'
         action :create
@@ -123,7 +132,7 @@ module OmekaInstance
       omeka_dirs = %w(fullsize original square_thumbnails theme_uploads thumbnails)
       omeka_dirs.each do |omeka_dir|
         directory "#{dir}files/#{omeka_dir}" do
-          owner node['apache']['user']
+          owner webserver_user
           group new_resource.instance_owner
           mode '0755'
           action :create
@@ -132,11 +141,11 @@ module OmekaInstance
 
       # Get Omeka Plugins.
       new_resource.plugins_list.each do |p|
-        get_files(new_resource.addons_location, p, "#{dir}plugins")
+        get_files(new_resource.addons_location, p, "#{dir}plugins", new_resource.instance_owner)
       end
       # Get Omeka These.
       new_resource.themes_list.each do |p|
-        get_files(new_resource.addons_location, p, "#{dir}themes")
+        get_files(new_resource.addons_location, p, "#{dir}themes", new_resource.instance_owner)
       end
 
       bash 'reset theme permissions' do

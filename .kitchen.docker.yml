@@ -3,11 +3,18 @@ settings:
 
 driver:
   name: docker
-  privileged: true
   use_sudo: false
+  provision_command: &1
+    - curl -L http://www.opscode.com/chef/install.sh | bash
 
-provisioner:
-  name: chef_zero
+ driver_config:
+    hostname: kitchen
+    use_sudo: true
+    socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
+    #  socket: tcp://localhost:4243
+    require_chef_omnibus: false
+    provision_command: &1
+      - curl -L http://www.opscode.com/chef/install.sh | bash
 
 platforms:
 - name: centos-6
@@ -30,11 +37,7 @@ platforms:
   driver:
     image: ubuntu:14.04
     platform: ubuntu
-    disable_upstart: false
     run_command: /sbin/init
-    provision_command:
-      - /usr/bin/apt-get update
-      - /usr/bin/apt-get install apt-transport-https net-tools -y
 - name: ubuntu-16.04
   driver:
     image: ubuntu:16.04
@@ -44,49 +47,3 @@ platforms:
     provision_command:
       - /usr/bin/apt-get update
       - /usr/bin/apt-get install apt-transport-https net-tools -y
-
-
-suites:
-  - name: default
-    run_list:
-      - recipe[php::default]
-      - recipe[apache2]
-      - recipe[apache2::mod_rewrite]
-      - recipe[apache2::mod_ssl]
-      - recipe[apache2::mod_php5]
-      - recipe[omeka::default]
-      - recipe[omeka::solo]
-    attributes: 
-      poise_debug: true
-      machine_fqdn: omeka.dev
-      machine_fqdn_as_hostname: true
-      apache2:
-        listen_ports: ["80", "443"]
-      omeka:
-        addons:
-          plugins: [
-              'Neatline-2.5.1.zip',
-              'NeatlineFeatures-2.0.5.zip',
-              'Neatline-Widget-SIMILE-Timeline-2.0.4.zip',
-              'Neatline-Widget-Text-1.1.0.zip',
-              'Neatline-Time-2.1.0.zip',
-              'Neatline-Widget-Waypoints-2.0.2.zip',
-              'UniversalViewer-2.2.zip',
-              'IIIF-1.0.zip'
-              ]
-          themes: [
-              'Berlin-2.3.1.zip'
-              ]
-  - name: stack_only              
-    run_list:
-      - recipe[php::default]
-      - recipe[apache2]
-      - recipe[apache2::mod_rewrite]
-      - recipe[apache2::mod_ssl]
-      - recipe[apache2::mod_php5]
-      - recipe[omeka::default]
-    attributes: 
-      machine_fqdn: omeka.dev
-      machine_fqdn_as_hostname: true
-      apache2:
-        listen_ports: ["80", "443"]

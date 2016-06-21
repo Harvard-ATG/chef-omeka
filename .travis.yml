@@ -1,3 +1,5 @@
+language: generic
+
 sudo: required
 addons:
   apt:
@@ -12,19 +14,17 @@ env:
   - INSTANCE=default-ubuntu-1604
   - INSTANCE=default-centos-7
   - INSTANCE=default-centos-6
-install: echo "skip bundle install"
 before_script:
-- sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables
-  -N DOCKER )
-- eval "$(/opt/chefdk/bin/chef shell-init bash)"
-- "/opt/chefdk/embedded/bin/chef gem install kitchen-docker"
+  - eval "$(chef shell-init $(basename $SHELL))"
+  # https://github.com/zuazo/kitchen-in-travis-native/issues/1#issuecomment-142230889
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
+  - /opt/chefdk/embedded/bin/chef gem install kitchen-docker
 script:
 - "/opt/chefdk/embedded/bin/chef --version"
 - "/opt/chefdk/embedded/bin/rubocop --version"
-- "/opt/chefdk/embedded/bin/rubocop"
 - "/opt/chefdk/embedded/bin/foodcritic --version"
 - "/opt/chefdk/embedded/bin/foodcritic . --exclude spec"
-- KITCHEN_YAML=.kitchen.docker.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
+- KITCHEN_LOCAL YAML=.kitchen.docker.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
 notifications:
   slack:
     secure: adNeJerSMo42+TzMJB8078WNPZhSU3ONOUFJuGjJdDYIvPF4zVbbqdemKzfh6MJ23NDHD+2tV9MzdT4+UOCH4RSlDE1N1hRvpNzIWP3a1lgZGPwPbi1q1X9+DNbiYPWgfoA4E8sQTSEuMiv8n4V3l2aaGH7oMs85GvLYPYDkyVxbVUr/Pp5iuh4NssVI3kjG8VVxeHka78H/GqiRufbM+SepX3E+eERSUe/3LdyumaLItyd9Lpulg3rodB2ZKI3SOMWaInl5Iy/Tgn3uCgq2JFJcspw3tDU3i4PgJ/0iN3zEY7UjSu75RIsxvCDNybZYVorpOWbUM2bd3tT2hJ2VEwt+q/RfY6WdnYTxFA8qh4LEcD2il2YJ/os9OKQCmwYKlEuYFm9dhpdHB/du28kQaFfN+BFKrL7yTFqv26vr3Bi1NcJLnTss1c31g1CDVlEyURzC6hQdWj5yvFGE/WkkWTqUsiN+AHOx5UnzPnyWmFm8ltJ+b+OgmETpTG30mZ4wgpmDGaGetPIqwkuXnAyRBc6AFp7N/BVUQOPuiQ2i7pEVGbKjKV2ke3Z1n3HSCcqLyyxO8AlayEEjEFrnZy+ILy0RBYiUbRheN1TU7H0/+wKi59PlvDJM2yiBbgZipirgE0hEuTmI+LwfqCJCM8pQ3/QEOhYvN7qc1egKKxmH1vQ=

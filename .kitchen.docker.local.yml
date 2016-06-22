@@ -1,27 +1,20 @@
+---
 settings:
   parallel: true
 
 driver:
   name: docker
   use_sudo: false
+  privileged: true
   provision_command: &1
     - curl -L http://www.opscode.com/chef/install.sh | bash
-
- driver_config:
-    hostname: kitchen
-    use_sudo: true
-    socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
-    #  socket: tcp://localhost:4243
-    require_chef_omnibus: false
-    provision_command: &1
-      - curl -L http://www.opscode.com/chef/install.sh | bash
+  #remove_images: true
 
 platforms:
 - name: centos-6
   driver:
     image: centos:6
     platform: rhel
-    run_command: /sbin/init
     provision_command:
       - /usr/bin/yum install -y initscripts net-tools wget
 - name: centos-7
@@ -30,20 +23,11 @@ platforms:
   driver:
     image: centos:7
     platform: rhel
-    run_command: /usr/lib/systemd/systemd
     provision_command:
     - /bin/yum install -y initscripts net-tools wget
-- name: ubuntu-14.04
+<% %w(14.04 16.04).each do |ubver| %>
+- name: ubuntu-<%= ubver %>
   driver:
-    image: ubuntu:14.04
+    image: ubuntu:<%= ubver %>
     platform: ubuntu
-    run_command: /sbin/init
-- name: ubuntu-16.04
-  driver:
-    image: ubuntu:16.04
-    platform: ubuntu
-    disable_upstart: false
-    run_command: /sbin/init
-    provision_command:
-      - /usr/bin/apt-get update
-      - /usr/bin/apt-get install apt-transport-https net-tools -y
+<% end %>

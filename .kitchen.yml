@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  customize:
-    memory: 1024
 
 provisioner:
   name: chef_zero
@@ -13,7 +11,6 @@ platforms:
       - recipe[apt]
     driver_config:
       box: "ubuntu/trusty64"
-
       network:
       - ["forwarded_port", {guest: 80, host: 8081}]
     cache:

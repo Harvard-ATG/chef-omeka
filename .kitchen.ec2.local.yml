@@ -2,7 +2,8 @@
 driver:
   name: ec2
   require_chef_omnibus: true
-  instance_type: t2.micro
+  instance_type: m3.medium
+  availability_zone: us-east-1e
 
 transport:
   ssh_key: /home/atg/.ssh/id_rsa
@@ -17,5 +18,6 @@ transport:
 platforms:
   - name: ubuntu-14.04
     driver:
-      image_id: ami-fce3c696
-
+      image_id: ami-b2e3c6d8
+    transport:
+      username: ubuntu
